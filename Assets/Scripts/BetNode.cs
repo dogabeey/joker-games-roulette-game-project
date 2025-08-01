@@ -6,5 +6,6 @@ public class BetNode : MonoBehaviour
 {
     [Tooltip("How much your money is multiplied when you win the bet.")]
     [SerializeField] private float gainMultiplier;
-    [SerializeField] private RouletteNumber rouletteNumber;
+    
+    public RouletteNumber[] connectedNumbers;
 }

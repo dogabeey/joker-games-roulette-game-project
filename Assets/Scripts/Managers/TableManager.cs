@@ -5,9 +5,24 @@ using UnityEngine;
 
 public class TableManager : MonoBehaviour
 {
-    // This list holds all the roulette numbers in the scene.
-    [SerializeField] private List<RouletteNumber> numbers;
+    
+    public static TableManager Instance { get; private set; }
 
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(this);
+    }
+
+    // This list holds all the roulette numbers in the scene.
+    public List<RouletteNumber> numbers;
+    public List<BetNode> betNodes;
+
+
+    public List<RouletteNumber> GetSelectedNumbers()
+    {
+        return numbers.Where(n => n.IsSelected).ToList();
+    }
     public void ToggleNumbers(params int[] selectedNumbers)
     {
         // First, disable all numbers.
@@ -20,13 +35,8 @@ public class TableManager : MonoBehaviour
         {
             if (selectedNumbers.Contains(number.number))
             {
-                number.IsSelected = true;   
+                number.IsSelected = true;
             }
         }
-    }
-
-    public List<RouletteNumber> GetSelectedNumbers()
-    {
-        return numbers.Where(n => n.IsSelected).ToList();
     }
 }
