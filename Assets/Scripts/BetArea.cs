@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public abstract class BetArea : MonoBehaviour
 {
@@ -33,7 +35,6 @@ public abstract class BetArea : MonoBehaviour
                 Debug.Log("Roulette Numbers: " + string.Join(", ", result));
         }
     }
-
     public abstract List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords);
 
 }
