@@ -24,9 +24,10 @@ public class ColumnBetArea : BetArea
             new List<string> { "1", "4", "7", "10", "13", "16", "19", "22", "25", "28", "31", "34" },
         };
 
-        if (column < 0 || column >= rowList.Length || row < 0 || row >= rowList[0].Count)
+        // Check if the world position is within the bounds of the bet area
+        if (worldPos.x < blCoords.x || worldPos.x > trCoords.x || worldPos.y < blCoords.y || worldPos.y > trCoords.y)
         {
-            Debug.LogWarning("Clicked outside of the Column Bet Area.");
+            Debug.LogWarning("Clicked outside of the Black Numbers Bet Area.");
             return null;
         }
         return rowList[row];

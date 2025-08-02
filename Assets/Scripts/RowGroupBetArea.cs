@@ -20,9 +20,10 @@ public class  RowGroupBetArea : BetArea
             new List<string> { "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24" },
             new List<string> { "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36" }
         };
-        if (column < 0 || column >= columnList.Length || row < 0 || row >= columnList[0].Count)
+        // Check if the world position is within the bounds of the bet area
+        if (worldPos.x < blCoords.x || worldPos.x > trCoords.x || worldPos.y < blCoords.y || worldPos.y > trCoords.y)
         {
-            Debug.LogWarning("Clicked outside of the Row Bet Area.");
+            Debug.LogWarning("Clicked outside of the Black Numbers Bet Area.");
             return null;
         }
         return columnList[column];
