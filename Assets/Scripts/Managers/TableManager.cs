@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class TableManager : MonoBehaviour
 {
-    
     public static TableManager Instance { get; private set; }
 
     private void Awake()

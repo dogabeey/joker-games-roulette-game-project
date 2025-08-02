@@ -22,7 +22,7 @@ public class RouletteNumber : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnValidate()
     {
         gameObject.name = "Number " + number.ToString();
     }
