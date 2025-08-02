@@ -15,8 +15,6 @@ public class TableManager : MonoBehaviour
 
     // This list holds all the roulette numbers in the scene.
     public List<RouletteNumber> numbers;
-    public List<BetNode> betNodes;
-
 
     public List<RouletteNumber> GetSelectedNumbers()
     {
