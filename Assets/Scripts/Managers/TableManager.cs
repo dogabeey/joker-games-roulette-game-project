@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TableManager : MonoBehaviour
 {
+    public List<RouletteNumber> numbers;
+
     public static TableManager Instance { get; private set; }
 
     private void Awake()
@@ -12,27 +14,41 @@ public class TableManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this);
     }
-
-    // This list holds all the roulette numbers in the scene.
-    public List<RouletteNumber> numbers;
-
-    public List<RouletteNumber> GetSelectedNumbers()
+    private void Start()
     {
-        return numbers.Where(n => n.IsSelected).ToList();
+        // Find all roulettenumbers in the scene and add them to numbers list.
+        numbers = FindObjectsOfType<RouletteNumber>().ToList();
     }
-    public void ToggleNumbers(params int[] selectedNumbers)
+    private void OnEnable()
     {
-        // First, disable all numbers.
-        foreach (RouletteNumber number in numbers)
+        EventManager.StartListening("BetPlaced", OnBetPlaced);
+    }
+    private void OnDisable()
+    {
+        EventManager.StopListening("BetPlaced", OnBetPlaced);
+    }
+    public void OnBetPlaced(EventParam e)
+    {
+        // Get paramDictionary's "number" value
+        if (e.paramDictionary != null && e.paramDictionary.TryGetValue("number", out object value) && value is List<string> eventNumbers)
         {
-            number.IsSelected = false;
-        }
-        // Then, enable only the selected numbers.
-        foreach (RouletteNumber number in numbers)
-        {
-            if (selectedNumbers.Contains(number.number))
+            foreach (RouletteNumber number in numbers)
             {
-                number.IsSelected = true;
+                number.ToggleNumber(false); // Deselect all numbers
+            }
+            // Check if the numbers are valid
+            foreach (string number in eventNumbers)
+            {
+                // Find the Roulette number where the number value is number
+                RouletteNumber selectedNumber = numbers.FirstOrDefault(n => n.numberString == number);
+                if (selectedNumber != null)
+                {
+                    selectedNumber.ToggleNumber(true); // Select the number
+                }
+                else
+                {
+                    Debug.LogWarning($"Number {number} not found in table numbers.");
+                }
             }
         }
     }

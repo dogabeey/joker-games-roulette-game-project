@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RouletteNumber : MonoBehaviour
 {
-    public int number;
+    public string numberString;
     public Renderer selectionIndicator;
 
     private bool isSelected;
@@ -22,9 +22,10 @@ public class RouletteNumber : MonoBehaviour
         }
     }
 
+    
     private void OnValidate()
     {
-        gameObject.name = "Number " + number.ToString();
+        gameObject.name = "Number " + numberString;
     }
 
     public void ToggleNumber(bool isSelected)

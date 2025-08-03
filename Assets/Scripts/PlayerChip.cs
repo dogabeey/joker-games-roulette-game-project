@@ -5,36 +5,46 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerChip : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class PlayerChip : MonoBehaviour
 {
-    [Tooltip("Minimum detection range for the player chip to see the bet nodes.")]
-    public float minBetNodeRange;
+    private Vector3 offset;
+    private Camera mainCamera;
+    private bool isDragging = false;
 
-    private Vector3 lastPosition;
-
-    public void OnBeginDrag(PointerEventData eventData)
+    void Awake()
     {
-
-        Debug.Log("OnBeginDrag: " + eventData.position);
-        // Move the object on XY plane
-        lastPosition = transform.position;
-        Vector3 newPosition = Camera.main.ScreenToWorldPoint(eventData.position);
-        newPosition.z = lastPosition.z; // Keep the original Z position
-        transform.position = newPosition;
+        mainCamera = Camera.main;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    void OnMouseDown()
     {
-        lastPosition = transform.position;
-        Vector3 newPosition = Camera.main.ScreenToWorldPoint(eventData.position);
-        newPosition.z = lastPosition.z; // Keep the original Z position
-        transform.position = newPosition;
+        isDragging = true;
+        Vector3 mouseWorldPos = GetMouseWorldPosition();
+        offset = transform.position - mouseWorldPos;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    void OnMouseUp()
     {
-        EventParam param = new EventParam();
-        param.paramVector3 = transform.position;
-        EventManager.TriggerEvent("PLAYER_CHIP_PLACED", param);
+        isDragging = false;
+
+        EventParam e = new EventParam();
+        e.paramVector2 = transform.position;
+        EventManager.TriggerEvent("PlayerChipDropped", e);
+    }
+
+    void Update()
+    {
+        if (isDragging)
+        {
+            Vector3 mouseWorldPos = GetMouseWorldPosition();
+            transform.position = mouseWorldPos + offset;
+        }
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        Vector3 mouseScreenPos = Input.mousePosition;
+        mouseScreenPos.z = Mathf.Abs(mainCamera.transform.position.z); // Distance from camera
+        return mainCamera.ScreenToWorldPoint(mouseScreenPos);
     }
 }

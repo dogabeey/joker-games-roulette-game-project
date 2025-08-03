@@ -35,7 +35,6 @@ public class RowBetArea : BetArea
         };
         if (column < 0 || column >= columnList.Length || row < 0 || row >= columnList[0].Count)
         {
-            Debug.LogWarning("Clicked outside of the Row Bet Area.");
             return null;
         }
         return columnList[column];

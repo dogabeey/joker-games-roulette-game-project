@@ -27,7 +27,6 @@ public class ColumnBetArea : BetArea
         // Check if the world position is within the bounds of the bet area
         if (worldPos.x < blCoords.x || worldPos.x > trCoords.x || worldPos.y < blCoords.y || worldPos.y > trCoords.y)
         {
-            Debug.LogWarning("Clicked outside of the Black Numbers Bet Area.");
             return null;
         }
         return rowList[row];
