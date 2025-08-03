@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4198033557506778185}
   - component: {fileID: 8901986870096491020}
   m_Layer: 0
-  m_Name: Number 1
+  m_Name: 'Number '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823d1ebc79087184c8fb353bb493361a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  number: 1
+  numberString: 
   selectionIndicator: {fileID: 1522950075832421118}
 --- !u!1 &7668420098368011355
 GameObject:
