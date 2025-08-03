@@ -1,5 +1,4 @@
-﻿using Dogabeey;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +14,8 @@ public class PlayerChip : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+
+        Debug.Log("OnBeginDrag: " + eventData.position);
         // Move the object on XY plane
         lastPosition = transform.position;
         Vector3 newPosition = Camera.main.ScreenToWorldPoint(eventData.position);
