@@ -51,6 +51,7 @@ public class TableManager : MonoBehaviour
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)
     {
+        // TODO: Placement doesn't work properly for column and row group.
         if (betArea.betNameID == "number")
         {
             // If the bet is a number bet, place the chip between all selected numbers
