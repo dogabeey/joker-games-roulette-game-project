@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BlackNumbersBetArea : BetArea
 {
+    public override string betNameID => "redBlack";
     public override int Priority => 1;
 
     public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)

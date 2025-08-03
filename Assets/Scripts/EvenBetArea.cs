@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EvenBetArea : BetArea
 {
+    public override string betNameID => "oddEven";
     public override int Priority => 2;
     public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
     {

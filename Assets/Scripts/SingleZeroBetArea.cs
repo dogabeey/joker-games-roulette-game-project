@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SingleZeroBetArea : BetArea
 {
+    public override string betNameID => "number"; // Assuming this is the ID for single zero bets
     public override int Priority => 1;
 
     public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)

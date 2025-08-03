@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SecondHalfBetArea : BetArea
 {
+    public override string betNameID => "highLow"; // Assuming this is the ID for second half bets
     public override int Priority => 2;
     public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
     {

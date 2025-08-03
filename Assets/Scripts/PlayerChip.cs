@@ -11,6 +11,7 @@ public class PlayerChip : MonoBehaviour
     private Camera mainCamera;
     private bool isDragging = false;
 
+
     void Awake()
     {
         mainCamera = Camera.main;
@@ -29,7 +30,7 @@ public class PlayerChip : MonoBehaviour
 
         EventParam e = new EventParam();
         e.paramVector2 = transform.position;
-        EventManager.TriggerEvent("PlayerChipDropped", e);
+        EventManager.TriggerEvent(Constants.EVENTS.PLAYER_CHIP_PLACED, e);
     }
 
     void Update()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RowBetArea : BetArea
 {
+    public override string betNameID => "number"; // Assuming this is the ID for row bets
     public override int Priority => 2;
 
     public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
