@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class TableManager : MonoBehaviour
 {
-    public List<RouletteNumber> numbers;
-    public PlayerChip playerChip;
-
+    internal List<RouletteNumber> numbers;
+    internal PlayerChip playerChip;
     internal float currentBetAmount = 0f;
     internal float currentPayoutMultiplier = 1f;
 
@@ -15,6 +14,11 @@ public class TableManager : MonoBehaviour
     {
         // Find all roulettenumbers in the scene and add them to numbers list.
         numbers = FindObjectsOfType<RouletteNumber>().ToList();
+        playerChip = FindObjectOfType<PlayerChip>();
+        if (playerChip == null)
+        {
+            Debug.LogError("PlayerChip not found in the scene. Please ensure there is a PlayerChip component in the scene.");
+        }
     }
     private void OnEnable()
     {
