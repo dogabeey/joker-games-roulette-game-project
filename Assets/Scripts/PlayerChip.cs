@@ -7,10 +7,10 @@ using UnityEngine.EventSystems;
 
 public class PlayerChip : MonoBehaviour
 {
-    private Vector3 offset;
     private Camera mainCamera;
+    private Plane dragPlane;
+    private Vector3 offset;
     private bool isDragging = false;
-
 
     void Awake()
     {
@@ -19,15 +19,27 @@ public class PlayerChip : MonoBehaviour
 
     void OnMouseDown()
     {
-        isDragging = true;
-        Vector3 mouseWorldPos = GetMouseWorldPosition();
-        offset = transform.position - mouseWorldPos;
+        // Create a plane in XY direction at the object's position
+        dragPlane = new Plane(Vector3.forward, transform.position); // Normal = Z axis (XY plane)
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (dragPlane.Raycast(ray, out float distance))
+        {
+            Vector3 hitPoint = ray.GetPoint(distance);
+            offset = transform.position - hitPoint;
+            isDragging = true;
+        }
     }
 
     void OnMouseUp()
     {
         isDragging = false;
 
+        SendPlayerChipEvent();
+    }
+
+    private void SendPlayerChipEvent()
+    {
         EventParam e = new EventParam();
         e.paramVector2 = transform.position;
         EventManager.TriggerEvent(Constants.EVENTS.PLAYER_CHIP_PLACED, e);
@@ -37,15 +49,12 @@ public class PlayerChip : MonoBehaviour
     {
         if (isDragging)
         {
-            Vector3 mouseWorldPos = GetMouseWorldPosition();
-            transform.position = mouseWorldPos + offset;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (dragPlane.Raycast(ray, out float distance))
+            {
+                Vector3 hitPoint = ray.GetPoint(distance);
+                transform.position = hitPoint + offset;
+            }
         }
-    }
-
-    private Vector3 GetMouseWorldPosition()
-    {
-        Vector3 mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Mathf.Abs(mainCamera.transform.position.z); // Distance from camera
-        return mainCamera.ScreenToWorldPoint(mouseScreenPos);
     }
 }
