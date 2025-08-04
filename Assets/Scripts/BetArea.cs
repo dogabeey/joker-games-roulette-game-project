@@ -63,19 +63,22 @@ public abstract class BetArea : MonoBehaviour
     {
         Vector2 worldPos = e.paramVector2;
         List<string> result = GetRouletteNumber(worldPos, startRef.position, endRef.position);
-        if (result != null && result.Count > 0)
+        if (result != null)
         {
-            Debug.Log($"Bet Area: {this.name} - Result: {string.Join(", ", result)}");
-            Dictionary<string, object> p = new Dictionary<string, object>
+            if (result.Count > 0)
             {
-                { "numberList", result },
-                { "startRef", startRef },
-                { "endRef", endRef },
-                { "betArea", this },
-                { "betMutliplier", GetPayoutMultiplierByBetType(betNameID, result.Count) }
-            };
-            EventParam e2 = new EventParam(paramDictionary: p);
-            EventManager.TriggerEvent(Constants.EVENTS.BET_PLACED, e2);
+                Debug.Log($"Bet Area: {this.name} - Result: {string.Join(", ", result)}");
+                Dictionary<string, object> p = new Dictionary<string, object>
+                {
+                    { "numberList", result },
+                    { "startRef", startRef },
+                    { "endRef", endRef },
+                    { "betArea", this },
+                    { "betMutliplier", GetPayoutMultiplierByBetType(betNameID, result.Count) }
+                };
+                EventParam e2 = new EventParam(paramDictionary: p);
+                EventManager.TriggerEvent(Constants.EVENTS.BET_PLACED, e2);
+            }
         }
     }
 
