@@ -62,7 +62,14 @@ public abstract class BetArea : MonoBehaviour
     public void OnPlayerChipDropped(EventParam e)
     {
         Vector2 worldPos = e.paramVector2;
-        List<string> result = GetRouletteNumber(worldPos, startRef.position, endRef.position);
+        List<string> result = GetRouletteNumbers(worldPos, startRef.position, endRef.position);
+        // Check if worldPos is between startRef and endRef
+        if (worldPos.x < startRef.position.x || worldPos.x > endRef.position.x ||
+            worldPos.y < startRef.position.y || worldPos.y > endRef.position.y)
+        {
+            Debug.Log($"Bet Area: {this.name} - World position {worldPos} is outside the bet area.");
+            return;
+        }
         if (result != null)
         {
             if (result.Count > 0)
@@ -78,6 +85,11 @@ public abstract class BetArea : MonoBehaviour
                 };
                 EventParam e2 = new EventParam(paramDictionary: p);
                 EventManager.TriggerEvent(Constants.EVENTS.BET_PLACED, e2);
+            }
+            else
+            {
+                EventManager.TriggerEvent(Constants.EVENTS.BET_REMOVED, new EventParam());
+                Debug.Log($"Bet Area: {this.name} - No valid numbers found for position: {worldPos}");
             }
         }
     }
@@ -95,6 +107,6 @@ public abstract class BetArea : MonoBehaviour
         Gizmos.DrawLine(new Vector3(startRef.position.x, endRef.position.y, 0), new Vector3(endRef.position.x, startRef.position.y, 0));
     }
 
-    public abstract List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords);
+    public abstract List<string> GetRouletteNumbers(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords);
 
 }

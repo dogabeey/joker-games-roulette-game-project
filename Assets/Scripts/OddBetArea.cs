@@ -5,7 +5,7 @@ public class OddBetArea : BetArea
 {
     public override string betNameID => "oddEven"; // Assuming this is the ID for odd bets
     public override int Priority => 1;
-    public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
+    public override List<string> GetRouletteNumbers(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
     {
         // Example logic for OddBetArea
         List<string> numbers = new List<string>();

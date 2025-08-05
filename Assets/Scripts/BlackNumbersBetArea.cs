@@ -6,7 +6,7 @@ public class BlackNumbersBetArea : BetArea
     public override string betNameID => "redBlack";
     public override int Priority => 1;
 
-    public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
+    public override List<string> GetRouletteNumbers(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
     {
         // Define the black numbers in roulette
         List<string> blackNumbers = new List<string>

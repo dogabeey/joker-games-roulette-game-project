@@ -23,14 +23,15 @@ public class TableManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening(Constants.EVENTS.BET_PLACED, OnBetPlaced);
+        EventManager.StartListening(Constants.EVENTS.BET_REMOVED, OnBetRemoved);
     }
     private void OnDisable()
     {
         EventManager.StopListening(Constants.EVENTS.BET_PLACED, OnBetPlaced);
+        EventManager.StopListening(Constants.EVENTS.BET_REMOVED, OnBetRemoved);
     }
     public void OnBetPlaced(EventParam e)
     {
-        // Get paramDictionary's "number" value
         e.paramDictionary.TryGetValue("numberList", out object rouletteNumbersObj);
         e.paramDictionary.TryGetValue("startRef", out object startRefObj);
         e.paramDictionary.TryGetValue("endRef", out object endRefObj);
@@ -51,6 +52,11 @@ public class TableManager : MonoBehaviour
             // Move player chip middle of the start and end reference points if outer bet, otherwise place it between all selected numbers.
             PositionPlayerChip(eventNumbers, startRef, endRef, betArea);
         }
+    }
+    public void OnBetRemoved(EventParam e)
+    {
+        ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
+        currentPayoutMultiplier = 0;
     }
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)

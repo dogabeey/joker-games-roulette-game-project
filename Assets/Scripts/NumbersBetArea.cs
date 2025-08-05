@@ -9,7 +9,7 @@ public class NumbersBetArea : BetArea
     public override string betNameID => "number";
     public override int Priority => 1;
 
-    public override List<string> GetRouletteNumber(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
+    public override List<string> GetRouletteNumbers(Vector2 worldPos, Vector2 blCoords, Vector2 trCoords)
     {
 
         Vector2 size = trCoords - blCoords;
