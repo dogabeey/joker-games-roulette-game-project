@@ -30,6 +30,7 @@ public class RouletteWheelController : MonoBehaviour
     public float wheelSpinSpeed = 90f;
     [Header("Ball Movement Settings")]
     public float ballSpinSpeed = 720f; // Speed of the ball spin in degrees per second.
+    public float ballTravelDistance = 1;
     public int ballPreDropTurn = 1; // How many turns the ball spins before it starts dropping the the wheel.
     public int ballInWheelTurn = 1; // How many turns the ball spins while it is in the wheel.
 
@@ -57,14 +58,54 @@ public class RouletteWheelController : MonoBehaviour
         Vector3 startPosition = wheelTransform.position + Quaternion.Euler(0, 0, -angle) * Vector3.up * wheelSpinStartRadius;
         ballTransform.position = startPosition;
     }
-    public void SpinTheBallParent()
+    public IEnumerator SpinTheBallParent()
+    {
+        // Lerp the ballParent rotation to simulate the spinning of the ball.
+        float targetAngle = ballPreDropTurn * 360f; // Total angle to spin the ball
+        // Calculate the duration based on the spin speed
+        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
+        yield return StartCoroutine(SpinBallCoroutine(targetAngle, duration));
+        MoveBallTowardsWheel();
+    }
+    public void MoveBallTowardsWheel()
     {
         // Lerp the ballParent rotation to simulate the spinning of the ball.
         float targetAngle = ballPreDropTurn * 360f; // Total angle to spin the ball
         // Calculate the duration based on the spin speed
         float duration = targetAngle / ballSpinSpeed; // Duration in seconds
         StartCoroutine(SpinBallCoroutine(targetAngle, duration));
+        // Move the ball towards the wheel center while spinning it.
+        StartCoroutine(MoveBallTowardsWheelCoroutine());
     }
+
+    private IEnumerator MoveBallTowardsWheelCoroutine()
+    {
+        // Lerp the ball position towards the wheel center while spinning it.
+        float targetAngle = ballInWheelTurn * 360f; // Total angle to spin the ball while in the wheel
+        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
+        float elapsedTime = 0f;
+        Vector3 startPosition = ballTransform.position;
+        // Move the ball towards the ballParent's position.
+        Vector3 targetPosition = ballTransform.position + (ballParent.position - ballTransform.position).normalized * (wheelSpinStartRadius - wheelNumbersRadius);
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            // Move the ball towards the wheel center
+            ballTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            // Also send a raycast from ball to z axis to check if it hits the wheel and always set it's z position to the hit's z position.
+            RaycastHit hit;
+            if (Physics.Raycast(ballTransform.position, Vector3.forward, out hit, 10, LayerMask.NameToLayer("Wheel")))
+            {
+                ballTransform.position = new Vector3(ballTransform.position.x, ballTransform.position.y, hit.point.z);
+            }
+            // Spin the ball parent
+            float currentAngle = Mathf.Lerp(0, targetAngle, t);
+            ballParent.rotation = Quaternion.Euler(0, 0, currentAngle);
+            yield return null;
+        }
+    }
+
     private IEnumerator SpinBallCoroutine(float targetAngle, float duration)
     {
         float elapsedTime = 0f;
@@ -86,6 +127,6 @@ public class RouletteWheelController : MonoBehaviour
     public void DebugInstantiateBallOnDeterminedNumber(int determinedNumber)
     {
         InstantiateBall(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
-        SpinTheBallParent();
+        StartCoroutine(SpinTheBallParent());
     }
 }
