@@ -1,96 +1,91 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RouletteWheelController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform wheel;      // The spinning wheel
-    [SerializeField] private Transform ball;       // The roulette ball
-
+    public Transform ballParent; // Used for rotating the ball. Ball itself isn't rotated. 
+    public Transform ballTransform;
+    public Transform wheelTransform;
     [Header("Wheel Settings")]
-    [SerializeField] private int numberCount = 38; // 37 for European (0-36), 38 for American (0-36 + 00)
-    [SerializeField] private float wheelRadius = 1.2f;
-    [SerializeField] private float wheelSpinSpeed = 360f; // degrees per second
-    [SerializeField] private float spinDuration = 5f;
-
-    [Header("Ball Animation")]
-    [SerializeField] private float ballHeightOffset = 0.1f;
-    [SerializeField] private float ballFallDuration = 1.2f;
-
-    private float AnglePerNumber => 360f / numberCount;
-
-    private void Start()
+    public List<int> wheelNumbersEuropean = new List<int> 
+    { 
+        0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36,
+        11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9,
+        22, 18, 29, 7, 28, 12, 35, 3, 26 
+    };
+    public List<int> wheelNumbersAmerican = new List<int>
     {
-        SpinToNumber(17); // Lands on number 17
+        0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36,
+        11, 30, 8, 23, 10, -1, 5, 24, 16, 33, 1, 20, 14, 31, 9,
+        22, 18, 29, 7, 28, 12, 35, 3, 26 // -1 represents the '00' in American roulette
+    };
+    public float anglePerNumberEuropean = 9.729f; // 360 degrees / 37 numbers (0-36) in European roulette
+    public float anglePerNumberAmerican = 9.473f; // 360 degrees / 38 numbers (0-36 + 00) in American roulette
+    public float wheelSpinStartRadius = 5; // Distance from wheel center to start the ball spin.
+    public float wheelNumbersRadius = 3; // Distance from wheel center to the numbers.
+    public float wheelSpinSpeed = 90f;
+    [Header("Ball Movement Settings")]
+    public float ballSpinSpeed = 720f; // Speed of the ball spin in degrees per second.
+    public int ballPreDropTurn = 1; // How many turns the ball spins before it starts dropping the the wheel.
+    public int ballInWheelTurn = 1; // How many turns the ball spins while it is in the wheel.
+
+    private void OnDrawGizmos()
+    {
+        if (wheelTransform == null)
+            return;
+
+        // Draw the wheel spin start radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(wheelTransform.position, wheelTransform.position + Vector3.up * wheelSpinStartRadius);
+        // Draw the wheel numbers radius
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(wheelTransform.position, wheelTransform.position + Vector3.down * wheelNumbersRadius);
     }
 
-    /// <summary>
-    /// Call this method to spin the wheel and land the ball on a specific number index.
-    /// </summary>
-    /// <param name="targetNumberIndex">Index in the number layout, from 0 to numberCount - 1</param>
-    public void SpinToNumber(int targetNumberIndex)
+    // Step 1: Place the ball to the wheelSpinStartRadius distance from the wheel center based on determinedNumber's corresponding angle based on its index on wheelNumbers array.
+    // Step 2: Start spinning the ball for the specified number of ballPreDropTurn turns by rotating the ballParent transform.
+    // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
+    public void InstantiateBall(int determinedNumber, List<int> wheelNumbers, float anglePerNumber)
     {
-        StopAllCoroutines(); // In case you spin again quickly
-        StartCoroutine(SpinRoutine(targetNumberIndex));
+        float angle = 0f; // Starting angle
+        int numberIndex = wheelNumbers.IndexOf(determinedNumber);
+        angle = numberIndex * anglePerNumber;
+        Vector3 startPosition = wheelTransform.position + Quaternion.Euler(0, 0, -angle) * Vector3.up * wheelSpinStartRadius;
+        ballTransform.position = startPosition;
     }
-
-    private IEnumerator SpinRoutine(int targetNumber)
+    public void SpinTheBallParent()
     {
-        float elapsed = 0f;
-        float wheelStartRotation = Random.Range(0f, 360f);
+        // Lerp the ballParent rotation to simulate the spinning of the ball.
+        float targetAngle = ballPreDropTurn * 360f; // Total angle to spin the ball
+        // Calculate the duration based on the spin speed
+        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
+        StartCoroutine(SpinBallCoroutine(targetAngle, duration));
+    }
+    private IEnumerator SpinBallCoroutine(float targetAngle, float duration)
+    {
+        float elapsedTime = 0f;
+        float initialAngle = ballParent.eulerAngles.z;
+        float finalAngle = initialAngle + targetAngle;
 
-        // Animate the wheel spinning
-        while (elapsed < spinDuration)
+        while (elapsedTime < duration)
         {
-            elapsed += Time.deltaTime;
-            float angle = wheelStartRotation + wheelSpinSpeed * elapsed;
-            wheel.eulerAngles = new Vector3(-180, 0, angle);
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            float currentAngle = Mathf.Lerp(initialAngle, finalAngle, t);
+            ballParent.rotation = Quaternion.Euler(0, 0, currentAngle);
             yield return null;
         }
 
-        // Final wheel rotation
-        float finalWheelRotation = wheelStartRotation + wheelSpinSpeed * spinDuration;
-        float wheelAngleMod = finalWheelRotation % 360f;
-
-        // Determine the future angle of the target number
-        float targetLocalAngle = GetAngleForNumber(targetNumber); // e.g. 270 = top
-        float worldAngle = (targetLocalAngle + wheelAngleMod) % 360f;
-
-        // Convert to world position
-        Vector3 ballTargetPos = GetBallWorldPosition(worldAngle);
-
-        // Animate the ball falling
-        yield return AnimateBallFall(ballTargetPos);
+        ballParent.rotation = Quaternion.Euler(0, 0, finalAngle);
     }
 
-    private float GetAngleForNumber(int index)
+    public void DebugInstantiateBallOnDeterminedNumber(int determinedNumber)
     {
-        // Assuming clockwise number layout; adjust if yours differs
-        return 360f - (index * AnglePerNumber);
-    }
-
-    private Vector3 GetBallWorldPosition(float angle)
-    {
-        Vector3 center = wheel.position;
-        float rad = angle * Mathf.Deg2Rad;
-        Vector3 offset = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad)) * wheelRadius;
-        return center + offset + Vector3.up * ballHeightOffset;
-    }
-
-    private IEnumerator AnimateBallFall(Vector3 targetPos)
-    {
-        Vector3 start = targetPos + Vector3.up * 0.5f;
-        float elapsed = 0f;
-
-        while (elapsed < ballFallDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / ballFallDuration;
-            float bounce = Mathf.Sin(t * Mathf.PI) * 0.15f;
-            ball.position = Vector3.Lerp(start, targetPos, t) + Vector3.up * bounce;
-            yield return null;
-        }
-
-        ball.position = targetPos;
+        InstantiateBall(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
+        SpinTheBallParent();
     }
 }
