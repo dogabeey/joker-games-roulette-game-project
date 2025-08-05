@@ -6,6 +6,7 @@ using UnityEngine;
 public class TableManager : MonoBehaviour
 {
     internal List<RouletteNumber> numbers;
+    internal List<BetArea> betAreas;
     internal PlayerChip playerChip;
     internal float currentBetAmount = 0f;
     internal float currentPayoutMultiplier = 1f;
@@ -14,7 +15,9 @@ public class TableManager : MonoBehaviour
     {
         // Find all roulettenumbers in the scene and add them to numbers list.
         numbers = FindObjectsOfType<RouletteNumber>().ToList();
+        betAreas = FindObjectsOfType<BetArea>().ToList();
         playerChip = FindObjectOfType<PlayerChip>();
+
         if (playerChip == null)
         {
             Debug.LogError("PlayerChip not found in the scene. Please ensure there is a PlayerChip component in the scene.");
@@ -22,41 +25,49 @@ public class TableManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventManager.StartListening(Constants.EVENTS.BET_PLACED, OnBetPlaced);
-        EventManager.StartListening(Constants.EVENTS.BET_REMOVED, OnBetRemoved);
+        EventManager.StartListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
     }
     private void OnDisable()
     {
-        EventManager.StopListening(Constants.EVENTS.BET_PLACED, OnBetPlaced);
-        EventManager.StopListening(Constants.EVENTS.BET_REMOVED, OnBetRemoved);
+        EventManager.StopListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
     }
-    public void OnBetPlaced(EventParam e)
+    public void OnPlayerChipPlaced(EventParam e)
     {
-        e.paramDictionary.TryGetValue("numberList", out object rouletteNumbersObj);
-        e.paramDictionary.TryGetValue("startRef", out object startRefObj);
-        e.paramDictionary.TryGetValue("endRef", out object endRefObj);
-        e.paramDictionary.TryGetValue("betArea", out object betAreaObj);
-        e.paramDictionary.TryGetValue("betMutliplier", out object betMultiplierObj);
-        List<string> eventNumbers = rouletteNumbersObj as List<string>;
-        Transform startRef = startRefObj as Transform;
-        Transform endRef = endRefObj as Transform;
-        BetArea betArea = betAreaObj as BetArea;
-        float betMultiplier = (float) betMultiplierObj;
+        Vector2 worldPos = e.paramVector2;
+        // Find the bet area that contains the world position
+        BetArea betArea = betAreas.FirstOrDefault(b => b.IsPositionInBetArea(worldPos)) ?? null;
 
-        if (e.paramDictionary != null)
+        if (betArea == null)
         {
-            // Toggle number indicators
-            ToggleSelectedNumbers(eventNumbers);
-            // Change the current payout multiplier
-            currentPayoutMultiplier = betMultiplier;
-            // Move player chip middle of the start and end reference points if outer bet, otherwise place it between all selected numbers.
-            PositionPlayerChip(eventNumbers, startRef, endRef, betArea);
+            ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
+            currentPayoutMultiplier = 0;
+            return;
         }
-    }
-    public void OnBetRemoved(EventParam e)
-    {
-        ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
-        currentPayoutMultiplier = 0;
+        Transform startRef = betArea.startRef;
+        Transform endRef = betArea.endRef;
+        string betNameID = betArea.betNameID;
+
+        List<string> result = betArea.GetRouletteNumbers(worldPos, startRef.position, endRef.position);
+        if (result != null)
+        {
+            if (result.Count > 0)
+            {
+                Dictionary<string, object> p = new Dictionary<string, object>
+                {
+                    { "betMutliplier", GetPayoutMultiplierByBetType(betNameID, result.Count) }
+                };
+                EventParam e2 = new EventParam(paramDictionary: p);
+                EventManager.TriggerEvent(Constants.EVENTS.BET_PLACED, e2);
+                ToggleSelectedNumbers(result); // Select the numbers
+                PositionPlayerChip(result, startRef, endRef, betArea); // Position the player chip
+            }
+            else
+            {
+                EventManager.TriggerEvent(Constants.EVENTS.BET_REMOVED, new EventParam());
+                ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
+                currentPayoutMultiplier = 0;
+            }
+        }
     }
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)
@@ -88,6 +99,44 @@ public class TableManager : MonoBehaviour
             playerChip.transform.position = new Vector3(midPoint.x, midPoint.y, playerChip.transform.position.z);
         }
     }
+
+    /// <summary>
+    /// Returns the payout multiplier based on the bet type and the number of inner bets.
+    /// </summary>
+    /// <param name="betType">Name of the bet type based on the betNameID</param>
+    /// <param name="innerBetNumbers">If one of the inner bets, how many numbers it includes</param>
+    /// <returns></returns>
+    public static float GetPayoutMultiplierByBetType(string betType, float innerBetNumbers)
+    {
+        switch (betType)
+        {
+            case "number":
+                if (innerBetNumbers == 1)
+                    return Constants.VALUES.STRAIGHT_BET_PAY;
+                else if (innerBetNumbers == 2)
+                    return Constants.VALUES.SPLIT_BET_PAY;
+                else if (innerBetNumbers == 3)
+                    return Constants.VALUES.STREET_BET_PAY;
+                else if (innerBetNumbers == 4)
+                    return Constants.VALUES.CORNER_BET_PAY;
+                else
+                    return 1;
+            case "redBlack":
+                return Constants.VALUES.RED_BLACK_BET_PAY;
+            case "oddEven":
+                return Constants.VALUES.ODD_EVEN_BET_PAY;
+            case "highLow":
+                return Constants.VALUES.HIGH_LOW_BET_PAY;
+            case "dozen":
+                return Constants.VALUES.DOZEN_BET_PAY;
+            case "column":
+                return Constants.VALUES.COLUMN_BET_PAY;
+            default:
+                Debug.LogWarning($"Unknown bet type: {betType}");
+                return 0f;
+        }
+    }
+
 
     private void ToggleSelectedNumbers(List<string> eventNumbers)
     {
