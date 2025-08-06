@@ -111,7 +111,7 @@ public class RouletteWheelController : MonoBehaviour
         float elapsedTime = 0f;
         Vector3 startPosition = ballTransform.localPosition;
         // Move the ball towards the ballParent's position.
-        Vector3 targetPosition = ballTransform.localPosition - Vector3.up * (wheelSpinStartRadius - wheelNumbersRadius);
+        Vector3 targetPosition = ballTransform.localPosition + ((ballParent.position - ballTransform.position).normalized * (wheelSpinStartRadius - wheelNumbersRadius));
         targetPosition.z = ballLocalEndZLevel;
         while (elapsedTime < duration)
         {
