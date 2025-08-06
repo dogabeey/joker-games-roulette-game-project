@@ -7,9 +7,9 @@ using UnityEngine;
 public class RouletteWheelController : MonoBehaviour
 {
     [Header("References")]
-    public Transform ballParent; // Used for rotating the ball. Ball itself isn't rotated. 
     public Transform ballTransform;
     public Transform wheelTransform;
+    public Transform ballParent; // Used for rotating the ball. Ball itself isn't rotated.
     [Header("Wheel Settings")]
     public List<int> wheelNumbersEuropean = new List<int> 
     { 
@@ -29,10 +29,12 @@ public class RouletteWheelController : MonoBehaviour
     public float wheelNumbersRadius = 3; // Distance from wheel center to the numbers.
     public float wheelSpinSpeed = 90f;
     [Header("Ball Movement Settings")]
-    public float ballSpinSpeed = 720f; // Speed of the ball spin in degrees per second.
+    public float ballFirstSpinSpeed = 720f; // Speed of the ball spin in degrees per second.
+    public float ballSecondSpinSpeed = 180f; // Speed of the ball spin in degrees per second.
     public float ballTravelDistance = 1;
     public int ballPreDropTurn = 1; // How many turns the ball spins before it starts dropping the the wheel.
     public int ballInWheelTurn = 1; // How many turns the ball spins while it is in the wheel.
+    public float ballLocalEndZLevel; // LOCAL Z position of the ball when It stops spinning and placed one of the numbers.
 
     private void OnDrawGizmos()
     {
@@ -50,63 +52,79 @@ public class RouletteWheelController : MonoBehaviour
     // Step 1: Place the ball to the wheelSpinStartRadius distance from the wheel center based on determinedNumber's corresponding angle based on its index on wheelNumbers array.
     // Step 2: Start spinning the ball for the specified number of ballPreDropTurn turns by rotating the ballParent transform.
     // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
-    public void InstantiateBall(int determinedNumber, List<int> wheelNumbers, float anglePerNumber)
+    public void SendTheBallToDeterminedNumber(int determinedNumber, List<int> wheelNumbers, float anglePerNumber)
     {
+        // Calculate how many numbers to shift based on the wheel speed.
+        float duration1 = (ballPreDropTurn * 360f) / ballFirstSpinSpeed;
+        float duration2 = (ballInWheelTurn * 360f) / ballSecondSpinSpeed;
+        float totalDuration = duration1 + duration2;
+        float wheelTotalSpinAmount = totalDuration * wheelSpinSpeed;
+        int numberShift = Mathf.RoundToInt(wheelTotalSpinAmount / anglePerNumber);
+
+        // Start rotating the wheel based on spin speed.
+
         float angle = 0f; // Starting angle
-        int numberIndex = wheelNumbers.IndexOf(determinedNumber);
+        int numberIndex = wheelNumbers.IndexOf(determinedNumber) - numberShift;
         angle = numberIndex * anglePerNumber;
         Vector3 startPosition = wheelTransform.position + Quaternion.Euler(0, 0, -angle) * Vector3.up * wheelSpinStartRadius;
         ballTransform.position = startPosition;
+
+        StartCoroutine(SpinWheel());
+        StartCoroutine(SpinTheBallParent());
+    }
+    private IEnumerator SpinWheel()
+    {
+        float elapsedTime = 0f;
+        while (true)
+        {
+            elapsedTime += Time.deltaTime;
+            wheelTransform.Rotate(0, 0, wheelSpinSpeed * Time.deltaTime);
+            yield return null;
+        }
+
     }
     public IEnumerator SpinTheBallParent()
     {
         // Lerp the ballParent rotation to simulate the spinning of the ball.
         float targetAngle = ballPreDropTurn * 360f; // Total angle to spin the ball
         // Calculate the duration based on the spin speed
-        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
+        float duration = targetAngle / ballFirstSpinSpeed; // Duration in seconds
         yield return StartCoroutine(SpinBallCoroutine(targetAngle, duration));
         MoveBallTowardsWheel();
     }
     public void MoveBallTowardsWheel()
     {
         // Lerp the ballParent rotation to simulate the spinning of the ball.
-        float targetAngle = ballPreDropTurn * 360f; // Total angle to spin the ball
+        float targetAngle = ballInWheelTurn * 360f; // Total angle to spin the ball
         // Calculate the duration based on the spin speed
-        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
-        StartCoroutine(SpinBallCoroutine(targetAngle, duration));
         // Move the ball towards the wheel center while spinning it.
         StartCoroutine(MoveBallTowardsWheelCoroutine());
+        float duration = targetAngle / ballSecondSpinSpeed; // Duration in seconds
+        StartCoroutine(SpinBallCoroutine(targetAngle, duration, true));
     }
 
     private IEnumerator MoveBallTowardsWheelCoroutine()
     {
         // Lerp the ball position towards the wheel center while spinning it.
         float targetAngle = ballInWheelTurn * 360f; // Total angle to spin the ball while in the wheel
-        float duration = targetAngle / ballSpinSpeed; // Duration in seconds
+        float duration = targetAngle / ballSecondSpinSpeed; // Duration in seconds
         float elapsedTime = 0f;
-        Vector3 startPosition = ballTransform.position;
+        Vector3 startPosition = ballTransform.localPosition;
         // Move the ball towards the ballParent's position.
-        Vector3 targetPosition = ballTransform.position + (ballParent.position - ballTransform.position).normalized * (wheelSpinStartRadius - wheelNumbersRadius);
+        Vector3 targetPosition = ballTransform.localPosition - Vector3.up * (wheelSpinStartRadius - wheelNumbersRadius);
+        targetPosition.z = ballLocalEndZLevel;
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
             // Move the ball towards the wheel center
-            ballTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
-            // Also send a raycast from ball to z axis to check if it hits the wheel and always set it's z position to the hit's z position.
-            RaycastHit hit;
-            if (Physics.Raycast(ballTransform.position, Vector3.forward, out hit, 10, LayerMask.NameToLayer("Wheel")))
-            {
-                ballTransform.position = new Vector3(ballTransform.position.x, ballTransform.position.y, hit.point.z);
-            }
-            // Spin the ball parent
-            float currentAngle = Mathf.Lerp(0, targetAngle, t);
-            ballParent.rotation = Quaternion.Euler(0, 0, currentAngle);
+            ballTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
-    }
 
-    private IEnumerator SpinBallCoroutine(float targetAngle, float duration)
+        ballTransform.parent = wheelTransform;
+    }
+    private IEnumerator SpinBallCoroutine(float targetAngle, float duration, bool jumpTheBall = false)
     {
         float elapsedTime = 0f;
         float initialAngle = ballParent.eulerAngles.z;
@@ -114,6 +132,15 @@ public class RouletteWheelController : MonoBehaviour
 
         while (elapsedTime < duration)
         {
+            if(jumpTheBall)
+            {
+                // Add a slight jump effect to the ballParent to simulate the ball bouncing.
+                float jumpHeight = 1f;
+                Mathf.Lerp(0, jumpHeight, elapsedTime / duration);
+                float jumpTime = Mathf.PingPong(elapsedTime * 2f, 1f); // PingPong to create a bounce effect
+                float jumpOffset = Mathf.Sin(jumpTime * Mathf.PI) * jumpHeight; // Calculate the jump offset
+                ballParent.localPosition = new Vector3(ballParent.localPosition.x, jumpOffset, ballParent.localPosition.z);
+            }
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
             float currentAngle = Mathf.Lerp(initialAngle, finalAngle, t);
@@ -126,7 +153,6 @@ public class RouletteWheelController : MonoBehaviour
 
     public void DebugInstantiateBallOnDeterminedNumber(int determinedNumber)
     {
-        InstantiateBall(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
-        StartCoroutine(SpinTheBallParent());
+        SendTheBallToDeterminedNumber(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
     }
 }
