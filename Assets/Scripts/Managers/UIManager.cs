@@ -9,7 +9,9 @@ using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
+    public Button betButton;
     public TMP_InputField betInputField;
+    public TMP_InputField cheatInput;
     public TMP_Text payoutText;
 
     private float currentPayoutMultiplier = 0f;
@@ -17,13 +19,10 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        betInputField.onValueChanged.AddListener(SetPayoutText);  
-    }
+        betInputField.onValueChanged.AddListener(SetPayoutText);
+        betButton.onClick.AddListener(OnBetButtonClicked);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        SetBetButton();
     }
 
     private void OnEnable()
@@ -48,7 +47,19 @@ public class UIManager : MonoBehaviour
         {
             currentPayoutMultiplier = 0f;
         }
+
         SetPayoutText(betInputField.text);
+        SetBetButton();
+    }
+
+    private void OnBetButtonClicked()
+    {
+        EventManager.TriggerEvent(Constants.EVENTS.BET_PLAYED);
+    }
+
+    private void SetBetButton()
+    {
+        betButton.interactable = currentPayoutMultiplier != 0f;
     }
 
     private void SetPayoutText(string betText)

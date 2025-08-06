@@ -26,10 +26,12 @@ public class TableManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
+        EventManager.StartListening(Constants.EVENTS.BET_PLAYED, OnBetPlayed);
     }
     private void OnDisable()
     {
         EventManager.StopListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
+        EventManager.StopListening(Constants.EVENTS.BET_PLAYED, OnBetPlayed);
     }
     public void OnPlayerChipPlaced(EventParam e)
     {
@@ -68,6 +70,10 @@ public class TableManager : MonoBehaviour
                 currentPayoutMultiplier = 0;
             }
         }
+    }
+    private void OnBetPlayed(EventParam e)
+    {
+
     }
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)

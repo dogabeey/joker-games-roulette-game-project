@@ -20,6 +20,7 @@ public class Constants
     public struct EVENTS
     {
         public const string BET_PLACED = "BET_PLACED";
+        public const string BET_PLAYED = "BET_PLAYED";
         public const string BET_REMOVED = "BET_REMOVED";
         public const string PLAYER_CHIP_PLACED = "PLAYER_CHIP_PLACED";
     }
