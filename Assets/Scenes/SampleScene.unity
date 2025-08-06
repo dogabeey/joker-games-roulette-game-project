@@ -1556,7 +1556,7 @@ MonoBehaviour:
   anglePerNumberAmerican: 9.473
   wheelSpinStartRadius: 5.68
   wheelNumbersRadius: 3.02
-  wheelSpinSpeed: 90
+  wheelSpinSpeed: 45
   ballFirstSpinSpeed: 360
   ballSecondSpinSpeed: 180
   ballTravelDistance: 0.5

@@ -122,6 +122,8 @@ public class RouletteWheelController : MonoBehaviour
             yield return null;
         }
 
+
+        ballTransform.localPosition = targetPosition;
         ballTransform.parent = wheelTransform;
     }
     private IEnumerator SpinBallCoroutine(float targetAngle, float duration, bool jumpTheBall = false)
@@ -136,7 +138,7 @@ public class RouletteWheelController : MonoBehaviour
             {
                 // Add a slight jump effect to the ballParent to simulate the ball bouncing.
                 float jumpHeight = 1f;
-                Mathf.Lerp(0, jumpHeight, elapsedTime / duration);
+                Mathf.Lerp(jumpHeight, 0, elapsedTime / duration);
                 float jumpTime = Mathf.PingPong(elapsedTime * 2f, 1f); // PingPong to create a bounce effect
                 float jumpOffset = Mathf.Sin(jumpTime * Mathf.PI) * jumpHeight; // Calculate the jump offset
                 ballParent.localPosition = new Vector3(ballParent.localPosition.x, jumpOffset, ballParent.localPosition.z);
