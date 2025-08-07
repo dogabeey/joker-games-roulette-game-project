@@ -42,10 +42,10 @@ public class TableManager : MonoBehaviour
 
         if (betArea == null)
         {
-            ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
-            currentPayoutMultiplier = 0;
+            ResetBetState();
             return;
         }
+
         Transform startRef = betArea.startRef;
         Transform endRef = betArea.endRef;
         string betNameID = betArea.betNameID;
@@ -53,20 +53,22 @@ public class TableManager : MonoBehaviour
         List<string> result = betArea.GetRouletteNumbers(placedWorldPos, startRef.position, endRef.position);
         if (result != null)
         {
-            if (result.Count > 0)
-            {
-                float payoutMultiplier = GetPayoutMultiplierByBetType(betNameID, result.Count);
-                UIManager.Instance.SetPayout(payoutMultiplier); // Set the payout multiplier in the UI
-                ToggleSelectedNumbers(result); // Select the numbers
-                PositionPlayerChip(result, startRef, endRef, betArea); // Position the player chip
-            }
-            else
-            {
-                UIManager.Instance.SetPayout(0); // No valid bet, set payout to 0
-                ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
-                currentPayoutMultiplier = 0;
-            }
+            float payoutMultiplier = GetPayoutMultiplierByBetType(betNameID, result.Count);
+            UIManager.Instance.SetPayout(payoutMultiplier); // Set the payout multiplier in the UI
+            ToggleSelectedNumbers(result); // Select the numbers
+            PositionPlayerChip(result, startRef, endRef, betArea); // Position the player chip
         }
+        else
+        {
+            ResetBetState();
+        }
+    }
+
+    private void ResetBetState()
+    {
+        UIManager.Instance.SetPayout(0); // No valid bet, set payout to 0
+        ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
+        currentPayoutMultiplier = 0;
     }
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)

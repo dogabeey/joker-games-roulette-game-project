@@ -26,24 +26,21 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        betInputField.onValueChanged.AddListener(SetPayoutText);
         betButton.onClick.AddListener(OnBetButtonClicked);
 
         SetBetButton();
     }
 
-    private void OnEnable()
+    private void Update()
     {
+        SetPayoutText();
+        SetBetButton();
     }
-    private void OnDisable()
-    {
-    }
+
     public void SetPayout(float betMultiplier)
     {
         currentPayoutMultiplier = betMultiplier;
 
-        SetPayoutText(betInputField.text);
-        SetBetButton();
     }
 
     private void OnBetButtonClicked()
@@ -54,14 +51,14 @@ public class UIManager : MonoBehaviour
 
     private void SetBetButton()
     {
-        betButton.interactable = currentPayoutMultiplier != 0f;
+        betButton.interactable = currentPayoutMultiplier != 0f && betInputField.text != "";
     }
 
-    private void SetPayoutText(string betText)
+    private void SetPayoutText()
     {
-        if (currentPayoutMultiplier != 0 && betText != "")
+        if (currentPayoutMultiplier != 0 && betInputField.text != "")
         {
-            payoutText.text = "$" + Mathf.RoundToInt(Convert.ToInt32(betText) * currentPayoutMultiplier);
+            payoutText.text = "$" + Mathf.RoundToInt(Convert.ToInt32(betInputField.text) * currentPayoutMultiplier);
         }
         else
         {
