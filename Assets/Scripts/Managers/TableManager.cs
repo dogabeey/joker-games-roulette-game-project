@@ -8,6 +8,8 @@ public class TableManager : MonoBehaviour
 {
     public static TableManager Instance;
 
+    public TableType tableType;
+
     internal List<RouletteNumber> numbers;
     internal List<BetArea> betAreas;
     internal PlayerChip playerChip;
@@ -158,4 +160,10 @@ public class TableManager : MonoBehaviour
             }
         }
     }
+}
+
+public enum TableType
+{
+    European,
+    American
 }

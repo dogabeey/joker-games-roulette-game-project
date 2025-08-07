@@ -7,7 +7,9 @@ using Unity.VisualScripting;
 
 public class RouletteWheelController : MonoBehaviour
 {
-    public RouletteWheelController Instance;
+    public static RouletteWheelController Instance;
+
+    public TableType tableType;
 
     [Header("References")]
     public Transform ballTransform;
@@ -61,8 +63,11 @@ public class RouletteWheelController : MonoBehaviour
     // Step 1: Place the ball to the wheelSpinStartRadius distance from the wheel center based on determinedNumber's corresponding angle based on its index on wheelNumbers array.
     // Step 2: Start spinning the ball for the specified number of ballPreDropTurn turns by rotating the ballParent transform.
     // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
-    public void SendTheBallToDeterminedNumber(int determinedNumber, List<int> wheelNumbers, float anglePerNumber)
+    public void SendTheBallToDeterminedNumber(int determinedNumber)
     {
+        List<int> wheelNumbers = tableType == TableType.European ? wheelNumbersEuropean : wheelNumbersAmerican;
+        float anglePerNumber = tableType == TableType.European ? anglePerNumberEuropean : anglePerNumberAmerican;
+
         // Calculate how many numbers to shift based on the wheel speed.
         float duration1 = (ballPreDropTurn * 360f) / ballFirstSpinSpeed;
         float duration2 = (ballInWheelTurn * 360f) / ballSecondSpinSpeed;
@@ -164,17 +169,22 @@ public class RouletteWheelController : MonoBehaviour
 
     public void DebugInstantiateBallOnDeterminedNumber(int determinedNumber)
     {
-        SendTheBallToDeterminedNumber(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
+        SendTheBallToDeterminedNumber(determinedNumber);
     }
 
-    internal void PlayBet()
+    internal void PlayBet(int number)
     {
-        if (currentBetAmount <= 0)
-        {
-            Debug.LogError("You are not supposed to play a bet with 0 amount.");
-            return;
-        }
+        int minimumNumber = tableType == TableType.European ? 0 : -1; // European roulette starts from 0, American roulette starts from -1 (00).
 
+        if (number < minimumNumber || number > 36) // If a number outside the range is provided, generate a random number within the valid range.
+        {
+            int randomNumber = UnityEngine.Random.Range(minimumNumber, 37);
+            SendTheBallToDeterminedNumber(randomNumber);
+        }
+        else
+        {
+            SendTheBallToDeterminedNumber(number);
+        }
 
     }
 }

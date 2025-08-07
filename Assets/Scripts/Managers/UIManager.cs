@@ -48,7 +48,8 @@ public class UIManager : MonoBehaviour
 
     private void OnBetButtonClicked()
     {
-        TableManager.Instance.PlayBet(Convert.ToInt32(cheatInput.text));
+        int number = cheatInput.text != "" ? Convert.ToInt32(cheatInput.text) : -100;
+        RouletteWheelController.Instance.PlayBet(number);
     }
 
     private void SetBetButton()
