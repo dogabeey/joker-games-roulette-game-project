@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class RouletteWheelController : MonoBehaviour
 {
+    public RouletteWheelController Instance;
+
     [Header("References")]
     public Transform ballTransform;
     public Transform wheelTransform;
@@ -36,6 +39,11 @@ public class RouletteWheelController : MonoBehaviour
     public int ballInWheelTurn = 1; // How many turns the ball spins while it is in the wheel.
     public float ballLocalEndZLevel; // LOCAL Z position of the ball when It stops spinning and placed one of the numbers.
 
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void OnDrawGizmos()
     {
@@ -157,5 +165,16 @@ public class RouletteWheelController : MonoBehaviour
     public void DebugInstantiateBallOnDeterminedNumber(int determinedNumber)
     {
         SendTheBallToDeterminedNumber(determinedNumber, wheelNumbersEuropean, anglePerNumberEuropean);
+    }
+
+    internal void PlayBet()
+    {
+        if (currentBetAmount <= 0)
+        {
+            Debug.LogError("You are not supposed to play a bet with 0 amount.");
+            return;
+        }
+
+
     }
 }

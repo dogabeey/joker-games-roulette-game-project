@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
+
     public Button betButton;
     public TMP_InputField betInputField;
     public TMP_InputField cheatInput;
@@ -16,6 +18,11 @@ public class UIManager : MonoBehaviour
 
     private float currentPayoutMultiplier = 0f;
 
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -27,26 +34,13 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.StartListening(Constants.EVENTS.BET_PLACED, OnPayoutMultiplierChanged);
-        EventManager.StartListening(Constants.EVENTS.BET_REMOVED, OnPayoutMultiplierChanged);
     }
     private void OnDisable()
     {
-        EventManager.StopListening(Constants.EVENTS.BET_PLACED, OnPayoutMultiplierChanged);
-        EventManager.StopListening(Constants.EVENTS.BET_REMOVED, OnPayoutMultiplierChanged);
     }
-    private void OnPayoutMultiplierChanged(EventParam e)
+    public void SetPayout(float betMultiplier)
     {
-        if(e.paramDictionary != null)
-        {
-            e.paramDictionary.TryGetValue("betMutliplier", out object betMultiplierObj);
-            float betMultiplier = (float)betMultiplierObj;
-            currentPayoutMultiplier = betMultiplier;
-        }
-        else
-        {
-            currentPayoutMultiplier = 0f;
-        }
+        currentPayoutMultiplier = betMultiplier;
 
         SetPayoutText(betInputField.text);
         SetBetButton();
@@ -54,7 +48,7 @@ public class UIManager : MonoBehaviour
 
     private void OnBetButtonClicked()
     {
-        EventManager.TriggerEvent(Constants.EVENTS.BET_PLAYED);
+        TableManager.Instance.PlayBet(Convert.ToInt32(cheatInput.text));
     }
 
     private void SetBetButton()

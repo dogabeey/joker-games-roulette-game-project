@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,11 +6,19 @@ using UnityEngine;
 
 public class TableManager : MonoBehaviour
 {
+    public static TableManager Instance;
+
     internal List<RouletteNumber> numbers;
     internal List<BetArea> betAreas;
     internal PlayerChip playerChip;
     internal float currentBetAmount = 0f;
     internal float currentPayoutMultiplier = 1f;
+
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {
@@ -23,21 +32,11 @@ public class TableManager : MonoBehaviour
             Debug.LogError("PlayerChip not found in the scene. Please ensure there is a PlayerChip component in the scene.");
         }
     }
-    private void OnEnable()
+
+    public void DetectPlacedBet(Vector2 placedWorldPos)
     {
-        EventManager.StartListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
-        EventManager.StartListening(Constants.EVENTS.BET_PLAYED, OnBetPlayed);
-    }
-    private void OnDisable()
-    {
-        EventManager.StopListening(Constants.EVENTS.PLAYER_CHIP_PLACED, OnPlayerChipPlaced);
-        EventManager.StopListening(Constants.EVENTS.BET_PLAYED, OnBetPlayed);
-    }
-    public void OnPlayerChipPlaced(EventParam e)
-    {
-        Vector2 worldPos = e.paramVector2;
         // Find the bet area that contains the world position
-        BetArea betArea = betAreas.FirstOrDefault(b => b.IsPositionInBetArea(worldPos)) ?? null;
+        BetArea betArea = betAreas.FirstOrDefault(b => b.IsPositionInBetArea(placedWorldPos)) ?? null;
 
         if (betArea == null)
         {
@@ -49,31 +48,23 @@ public class TableManager : MonoBehaviour
         Transform endRef = betArea.endRef;
         string betNameID = betArea.betNameID;
 
-        List<string> result = betArea.GetRouletteNumbers(worldPos, startRef.position, endRef.position);
+        List<string> result = betArea.GetRouletteNumbers(placedWorldPos, startRef.position, endRef.position);
         if (result != null)
         {
             if (result.Count > 0)
             {
-                Dictionary<string, object> p = new Dictionary<string, object>
-                {
-                    { "betMutliplier", GetPayoutMultiplierByBetType(betNameID, result.Count) }
-                };
-                EventParam e2 = new EventParam(paramDictionary: p);
-                EventManager.TriggerEvent(Constants.EVENTS.BET_PLACED, e2);
+                float payoutMultiplier = GetPayoutMultiplierByBetType(betNameID, result.Count);
+                UIManager.Instance.SetPayout(payoutMultiplier); // Set the payout multiplier in the UI
                 ToggleSelectedNumbers(result); // Select the numbers
                 PositionPlayerChip(result, startRef, endRef, betArea); // Position the player chip
             }
             else
             {
-                EventManager.TriggerEvent(Constants.EVENTS.BET_REMOVED, new EventParam());
+                UIManager.Instance.SetPayout(0); // No valid bet, set payout to 0
                 ToggleSelectedNumbers(new List<string>()); // Deselect all numbers
                 currentPayoutMultiplier = 0;
             }
         }
-    }
-    private void OnBetPlayed(EventParam e)
-    {
-
     }
 
     private void PositionPlayerChip(List<string> eventNumbers, Transform startRef, Transform endRef, BetArea betArea)

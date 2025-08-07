@@ -35,14 +35,7 @@ public class PlayerChip : MonoBehaviour
     {
         isDragging = false;
 
-        SendPlayerChipEvent();
-    }
-
-    private void SendPlayerChipEvent()
-    {
-        EventParam e = new EventParam();
-        e.paramVector2 = transform.position;
-        EventManager.TriggerEvent(Constants.EVENTS.PLAYER_CHIP_PLACED, e);
+        TableManager.Instance.DetectPlacedBet(transform.position);
     }
 
     void Update()
