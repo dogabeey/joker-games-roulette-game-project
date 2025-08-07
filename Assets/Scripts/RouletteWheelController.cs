@@ -95,7 +95,7 @@ public class RouletteWheelController : MonoBehaviour
         while (true)
         {
             elapsedTime += Time.deltaTime;
-            wheelTransform.Rotate(0, 0, wheelSpinSpeed * Time.deltaTime);
+            wheelTransform.Rotate(0, wheelSpinSpeed * Time.deltaTime, 0);
             yield return null;
         }
 
@@ -132,6 +132,7 @@ public class RouletteWheelController : MonoBehaviour
         targetPosition.z = ballLocalEndZLevel;
         while (elapsedTime < duration)
         {
+
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
             // Move the ball towards the wheel center

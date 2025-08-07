@@ -1396,6 +1396,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 902674341}
   m_CullTransparentMesh: 1
+--- !u!4 &966852517 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3313756893220794158, guid: 2764a7cc3afce3b4db12f3c1cd58b3f4, type: 3}
+  m_PrefabInstance: {fileID: 3110976634028474728}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1026178039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3320,6 +3325,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roulette Wheel
       objectReference: {fileID: 0}
+    - target: {fileID: 3183704381912535325, guid: 2764a7cc3afce3b4db12f3c1cd58b3f4, type: 3}
+      propertyPath: wheelTransform
+      value: 
+      objectReference: {fileID: 966852517}
     - target: {fileID: 5781096893306030608, guid: 2764a7cc3afce3b4db12f3c1cd58b3f4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

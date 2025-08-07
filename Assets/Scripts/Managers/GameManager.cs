@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
             Debug.Log($"Loss! Gain: {gain}, New Net Money: {NetMoney}");
         }
 
-        UIManager.Instance.ShowWinningNumber();
+        UIManager.Instance.ShowNumber(winningNumber);
     }
 }
 

@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void ShowWinningNumber()
+    public void ShowNumber(int number)
     {
         winningNumber.text = "" + GameManager.Instance.winningNumber;
     }
