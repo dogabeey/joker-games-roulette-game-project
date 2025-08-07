@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public float startingMoney;
     public TableType defaultTableType;
 
+    internal int winningNumber = -2;
     internal GameState gameState = GameState.betting;
 
     public float NetMoney
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Losses", value);
         }
     }
-    public TableType CurrenrTableType
+    public TableType CurrentTableType
     {
         get
         {
@@ -72,6 +73,30 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void CalculateGainBasedOnPayout(float betAmount, float payoutMultiplier)
+    {
+        if (payoutMultiplier <= 0)
+        {
+            Debug.LogError("Payout multiplier is zero or negative, no gain calculated.");
+            return;
+        }
+        float gain = betAmount * payoutMultiplier;
+        if (gain > 0)
+        {
+            Wins++;
+            NetMoney += gain;
+            Debug.Log($"Win! Gain: {gain}, New Net Money: {NetMoney}");
+        }
+        else
+        {
+            Losses++;
+            NetMoney -= betAmount;
+            Debug.Log($"Loss! Gain: {gain}, New Net Money: {NetMoney}");
+        }
+
+        UIManager.Instance.ShowWinningNumber();
     }
 }
 

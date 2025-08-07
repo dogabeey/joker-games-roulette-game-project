@@ -19,6 +19,8 @@ public class PlayerChip : MonoBehaviour
 
     void OnMouseDown()
     {
+        UIManager.Instance.HideWinningNumber();
+
         // Create a plane in XY direction at the object's position
         dragPlane = new Plane(Vector3.forward, transform.position); // Normal = Z axis (XY plane)
 

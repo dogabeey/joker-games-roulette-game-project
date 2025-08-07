@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public TMP_InputField betInputField;
     public TMP_InputField cheatInput;
     public TMP_Text payoutText;
+    public TMP_Text winningNumber;
 
     private float currentPayoutMultiplier = 0f;
 
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        SetBetValue();
         SetPayoutText();
         SetBetButton();
     }
@@ -43,6 +45,15 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void ShowWinningNumber()
+    {
+        winningNumber.text = "" + GameManager.Instance.winningNumber;
+    }
+    public void HideWinningNumber()
+    {
+        winningNumber.text = "";
+    }
+
     private void OnBetButtonClicked()
     {
         int number = cheatInput.text != "" ? Convert.ToInt32(cheatInput.text) : -100;
@@ -51,9 +62,20 @@ public class UIManager : MonoBehaviour
 
     private void SetBetButton()
     {
-        betButton.interactable = currentPayoutMultiplier != 0f && betInputField.text != "";
+        betButton.interactable = CanEnableBetButton();
     }
 
+    private bool CanEnableBetButton()
+    {
+        return currentPayoutMultiplier != 0f 
+            && betInputField.text != "" 
+            && GameManager.Instance.gameState == GameState.betting;
+    }
+
+    private void SetBetValue()
+    {
+        TableManager.Instance.currentBetAmount = betInputField.text != "" ? Convert.ToInt32(betInputField.text) : 0;
+    }
     private void SetPayoutText()
     {
         if (currentPayoutMultiplier != 0 && betInputField.text != "")

@@ -65,6 +65,9 @@ public class RouletteWheelController : MonoBehaviour
     // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
     public void SendTheBallToDeterminedNumber(int determinedNumber)
     {
+        GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
+        GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
+
         List<int> wheelNumbers = tableType == TableType.European ? wheelNumbersEuropean : wheelNumbersAmerican;
         float anglePerNumber = tableType == TableType.European ? anglePerNumberEuropean : anglePerNumberAmerican;
 
@@ -139,6 +142,14 @@ public class RouletteWheelController : MonoBehaviour
 
         ballTransform.localPosition = targetPosition;
         ballTransform.parent = wheelTransform;
+
+        // Return the game state to betting after the ball stops spinning.
+        GameManager.Instance.gameState = GameState.betting;
+        StopCoroutine(SpinWheel()); // Stop spinning the wheel. 
+
+        float currentBet = TableManager.Instance.currentBetAmount;
+        float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
+        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
     }
     private IEnumerator SpinBallCoroutine(float targetAngle, float duration, bool jumpTheBall = false)
     {
