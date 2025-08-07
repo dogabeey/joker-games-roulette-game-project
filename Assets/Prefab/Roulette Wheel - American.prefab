@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5781096893306030608}
   - component: {fileID: 3183704381912535325}
   m_Layer: 0
-  m_Name: Roulette Wheel - European
+  m_Name: Roulette Wheel - American
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330460932b5c9224ba15ed6b6c780888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tableType: 0
+  tableType: 1
   ballTransform: {fileID: 3895486266573301890}
   wheelTransform: {fileID: 8840334917585599660}
   ballParent: {fileID: 8933119269540215455}
