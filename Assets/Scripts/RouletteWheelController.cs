@@ -39,6 +39,7 @@ public class RouletteWheelController : MonoBehaviour
     public float ballTravelDistance = 1;
     public int ballPreDropTurn = 1; // How many turns the ball spins before it starts dropping the the wheel.
     public int ballInWheelTurn = 1; // How many turns the ball spins while it is in the wheel.
+    public float ballLocalStartZLevel;
     public float ballLocalEndZLevel; // LOCAL Z position of the ball when It stops spinning and placed one of the numbers.
 
     private void Awake()
@@ -83,29 +84,12 @@ public class RouletteWheelController : MonoBehaviour
         int numberIndex = wheelNumbers.IndexOf(determinedNumber) - numberShift;
         angle = numberIndex * anglePerNumber;
         Vector3 startPosition = wheelTransform.position + Quaternion.Euler(0, 0, -angle) * Vector3.up * wheelSpinStartRadius;
+        
         ballTransform.position = startPosition;
+        ballTransform.localPosition = new Vector3(ballTransform.localPosition.x, ballTransform.localPosition.y, ballLocalStartZLevel);
 
         StartCoroutine(SpinWheel());
         StartCoroutine(SpinTheBallParent());
-    }
-
-    private void OnMovementStart(int determinedNumber)
-    {
-        GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
-        GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
-
-        SoundManager.Instance.Play(Constants.SOUNDS.ROLLING_BALL); // Play the rolling ball sound.
-
-        ballTransform.gameObject.SetActive(true);
-    }
-    private void OnMovementEnd()
-    {
-        GameManager.Instance.gameState = GameState.betting;
-        StopCoroutine(SpinWheel()); // Stop spinning the wheel.
-        float currentBet = TableManager.Instance.currentBetAmount;
-        float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
-        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
-        SoundManager.Instance.Stop(Constants.SOUNDS.ROLLING_BALL); // Stop the rolling ball sound.
     }
 
     private IEnumerator SpinWheel()
@@ -165,6 +149,30 @@ public class RouletteWheelController : MonoBehaviour
 
         // Return the game state to betting after the ball stops spinning.
         OnMovementEnd();
+    }
+
+    private void OnMovementStart(int determinedNumber)
+    {
+        GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
+        GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
+
+        SoundManager.Instance.Play(Constants.SOUNDS.ROLLING_BALL); // Play the rolling ball sound.
+
+        ballTransform.gameObject.SetActive(true);
+        ballTransform.parent = ballParent;
+    }
+    private void OnMovementEnd()
+    {
+        StopCoroutine(SpinWheel()); // Stop spinning the wheel.
+
+        float currentBet = TableManager.Instance.currentBetAmount;
+        float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
+
+        GameManager.Instance.gameState = GameState.betting;
+        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
+        SoundManager.Instance.Stop(Constants.SOUNDS.ROLLING_BALL); // Stop the rolling ball sound.
+
+        
     }
 
 

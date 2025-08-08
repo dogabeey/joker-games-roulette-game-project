@@ -63,7 +63,8 @@ MonoBehaviour:
   ballTravelDistance: 0.5
   ballPreDropTurn: 4
   ballInWheelTurn: 2
-  ballLocalEndZLevel: -1
+  ballLocalStartZLevel: -2.62
+  ballLocalEndZLevel: -1.81
 --- !u!1 &709743015692876146
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,7 +82,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5449385938931034994
 Transform:
   m_ObjectHideFlags: 0
@@ -382,7 +383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7639699224297933565
 Transform:
   m_ObjectHideFlags: 0
@@ -540,7 +541,7 @@ Transform:
   m_GameObject: {fileID: 5681820299869231146}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.25, y: 0, z: -2.62}
+  m_LocalPosition: {x: 5.82, y: 0, z: -2.62}
   m_LocalScale: {x: 0.74, y: 0.74, z: 0.74}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -706,7 +707,7 @@ Transform:
   m_GameObject: {fileID: 9087629013790923559}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.59}
+  m_LocalPosition: {x: 0, y: 0, z: 4.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
