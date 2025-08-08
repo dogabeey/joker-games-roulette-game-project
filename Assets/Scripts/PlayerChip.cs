@@ -19,6 +19,11 @@ public class PlayerChip : MonoBehaviour
 
     void OnMouseDown()
     {
+        if(GameManager.Instance.gameState != GameState.betting)
+        {
+            return; // Ignore clicks if not in betting state
+        }
+
         UIManager.Instance.HideWinningNumber();
 
         // Create a plane in XY direction at the object's position
@@ -35,6 +40,11 @@ public class PlayerChip : MonoBehaviour
 
     void OnMouseUp()
     {
+        if (GameManager.Instance.gameState != GameState.betting)
+        {
+            return; // Ignore clicks if not in betting state
+        }
+
         isDragging = false;
 
         TableManager.Instance.DetectPlacedBet(transform.position);
@@ -42,6 +52,11 @@ public class PlayerChip : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState != GameState.betting)
+        {
+            return; // Ignore clicks if not in betting state
+        }
+
         if (isDragging)
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
