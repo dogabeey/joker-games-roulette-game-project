@@ -7,6 +7,10 @@ using TMPro;
 using System;
 using Unity.VisualScripting;
 
+/// <summary>
+/// UIManager is responsible for managing the user interface elements in the game. 
+/// It handles button interactions, displays the current bet, payout information, and player money.
+/// </summary>
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;

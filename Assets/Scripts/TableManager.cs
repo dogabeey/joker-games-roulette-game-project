@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manages the roulette table, including the numbers, bet areas, and player chip. 
+/// Handles the placement of bets and calculates payouts based on the bet type.
+/// </summary>
 public class TableManager : MonoBehaviour
 {
     public static TableManager Instance;

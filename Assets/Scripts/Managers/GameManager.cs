@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// GameManager is a singleton class that manages the game state, including the current bet, payouts, and the roulette wheel and table instantiation. 
+/// It handles the game logic for betting, winning, and losing, and keeps track of the player's net money, wins, and losses. It's the main class that controls the flow of the game.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;

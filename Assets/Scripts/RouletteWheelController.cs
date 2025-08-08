@@ -5,6 +5,10 @@ using System.Linq;
 using UnityEngine;
 using Unity.VisualScripting;
 
+/// <summary>
+/// Controller for the roulette wheel and ball movement. 
+/// It handles the spinning of the wheel, placing the ball on the determined number, and managing the game state during the spin.
+/// </summary>
 public class RouletteWheelController : MonoBehaviour
 {
     public static RouletteWheelController Instance;
