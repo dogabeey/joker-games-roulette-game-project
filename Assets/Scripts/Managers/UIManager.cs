@@ -139,13 +139,19 @@ public class UIManager : MonoBehaviour
     }
     private void SetPayoutText()
     {
-        if (currentPayoutMultiplier != 0 && betInputField.text != "")
+        if (currentPayoutMultiplier == 0)
         {
-            payoutText.text = "$" + GameManager.Instance.currentBet * currentPayoutMultiplier;
+            payoutText.text = "No chip placed!";
         }
-        else
+        if (GameManager.Instance.currentBet <= 0)
         {
             payoutText.text = "No bet placed!";
         }
+
+        if (currentPayoutMultiplier != 0 && GameManager.Instance.currentBet > 0)
+        {
+            payoutText.text = "PAYOUT: " + "$" + GameManager.Instance.currentBet * currentPayoutMultiplier;
+        }
+
     }
 }
