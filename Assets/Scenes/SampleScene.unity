@@ -750,7 +750,7 @@ MonoBehaviour:
   tablePrefabEuropean: {fileID: 5017819787160118567, guid: 2957d8474002ad9408697897e0161080, type: 3}
   currentBet: 0
   betIncreamental: 10
-  maxBet: 0
+  maxBet: 10000
 --- !u!114 &486267030
 MonoBehaviour:
   m_ObjectHideFlags: 0

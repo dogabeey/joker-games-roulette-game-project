@@ -63,7 +63,21 @@ public class UIManager : MonoBehaviour
     }
     private void OnIncreaseBetButtonClicked()
     {
-        GameManager.Instance.currentBet += 10;
+        float incrementalMultiplier;
+        if (GameManager.Instance.currentBet < 100)
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental;
+        }
+        else if (GameManager.Instance.currentBet < 1000)
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental * 10;
+        }
+        else
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental * 100;
+        }
+
+        GameManager.Instance.currentBet += incrementalMultiplier;
         if (GameManager.Instance.currentBet > GameManager.Instance.maxBet)
         {
             GameManager.Instance.currentBet = GameManager.Instance.maxBet;
@@ -71,7 +85,21 @@ public class UIManager : MonoBehaviour
     }
     private void OnLowerBetButtonClicked()
     {
-        GameManager.Instance.currentBet -= 10;
+        float incrementalMultiplier;
+        if (GameManager.Instance.currentBet < 200)
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental;
+        }
+        else if (GameManager.Instance.currentBet < 2000)
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental * 10;
+        }
+        else
+        {
+            incrementalMultiplier = GameManager.Instance.betIncreamental * 100;
+        }
+
+        GameManager.Instance.currentBet -= incrementalMultiplier;
         if (GameManager.Instance.currentBet < 0)
         {
             GameManager.Instance.currentBet = 0;
@@ -86,13 +114,28 @@ public class UIManager : MonoBehaviour
     private bool CanEnableBetButton()
     {
         return currentPayoutMultiplier != 0f 
-            && betInputField.text != "" 
+            && GameManager.Instance.currentBet > 0
             && GameManager.Instance.gameState == GameState.betting;
     }
 
     private void SetBetValue()
     {
-        GameManager.Instance.currentBet = betInputField.text != "" ? Convert.ToInt32(betInputField.text) : 0;
+        betInputField.text = ConvertDecimalToKMB(GameManager.Instance.currentBet);
+    }
+    private string ConvertDecimalToKMB(float value)
+    {
+        if (value >= 1000 && value < 1000000)
+        {
+            return (value / 1000).ToString("F1") + "K";
+        }
+        else if (value >= 1000000)
+        {
+            return (value / 1000000).ToString("F1") + "M";
+        }
+        else
+        {
+            return value.ToString("");
+        }
     }
     private void SetPayoutText()
     {
