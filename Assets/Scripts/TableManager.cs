@@ -15,6 +15,7 @@ public class TableManager : MonoBehaviour
     internal PlayerChip playerChip;
     internal float currentBetAmount = 0f;
     internal float currentPayoutMultiplier = 1f;
+    internal List<string> currentBetNumbers = new List<string>();
 
     private void Awake()
     {
@@ -57,6 +58,7 @@ public class TableManager : MonoBehaviour
             UIManager.Instance.SetPayout(payoutMultiplier); // Set the payout multiplier in the UI
             ToggleSelectedNumbers(result); // Select the numbers
             PositionPlayerChip(result, startRef, endRef, betArea); // Position the player chip
+            currentBetNumbers = result;
         }
         else
         {

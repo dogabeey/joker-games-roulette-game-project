@@ -90,15 +90,17 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void CalculateGainBasedOnPayout(float betAmount, float payoutMultiplier)
+    public void CalculateGainBasedOnPayout( float betAmount, float payoutMultiplier)
     {
+        bool isWin = TableManager.Instance.currentBetNumbers.Contains(winningNumber.ToString());
+
         if (payoutMultiplier <= 0)
         {
             Debug.LogError("Payout multiplier is zero or negative, no gain calculated.");
             return;
         }
         float gain = betAmount * payoutMultiplier;
-        if (gain > 0)
+        if (isWin)
         {
             Wins++;
             NetMoney += gain;
