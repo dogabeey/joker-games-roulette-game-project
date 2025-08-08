@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    public static SoundManager Instance;
+
     #region Classes
 
     [System.Serializable]
@@ -68,6 +70,7 @@ public class SoundManager : MonoBehaviour
 
     protected void Awake()
     {
+        Instance = this;
         playingAudioSources = new List<PlayingSound>();
         loopingAudioSources = new List<PlayingSound>();
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5781096893306030608}
   - component: {fileID: 3183704381912535325}
   m_Layer: 0
-  m_Name: Roulette Wheel - American
+  m_Name: wheel american
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,8 +326,8 @@ Transform:
   m_GameObject: {fileID: 2789703969304032660}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.010082, y: 0.06, z: 2.14}
-  m_LocalScale: {x: 4.9333, y: 4.9333, z: 4.9333}
+  m_LocalPosition: {x: 0.011268, y: 0.06, z: 3.7206}
+  m_LocalScale: {x: 5.3965344, y: 5.3965344, z: 5.3965344}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 350852249671347706}
@@ -530,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3895486266573301890
 Transform:
   m_ObjectHideFlags: 0

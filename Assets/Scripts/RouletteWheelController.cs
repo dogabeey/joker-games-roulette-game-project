@@ -65,10 +65,7 @@ public class RouletteWheelController : MonoBehaviour
     // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
     public void SendTheBallToDeterminedNumber(int determinedNumber)
     {
-        GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
-        GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
-
-        ballTransform.gameObject.SetActive(true);
+        OnMovementStart(determinedNumber);
 
         List<int> wheelNumbers = tableType == TableType.European ? wheelNumbersEuropean : wheelNumbersAmerican;
         float anglePerNumber = tableType == TableType.European ? anglePerNumberEuropean : anglePerNumberAmerican;
@@ -91,6 +88,26 @@ public class RouletteWheelController : MonoBehaviour
         StartCoroutine(SpinWheel());
         StartCoroutine(SpinTheBallParent());
     }
+
+    private void OnMovementStart(int determinedNumber)
+    {
+        GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
+        GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
+
+        SoundManager.Instance.Play(Constants.SOUNDS.ROLLING_BALL); // Play the rolling ball sound.
+
+        ballTransform.gameObject.SetActive(true);
+    }
+    private void OnMovementEnd()
+    {
+        GameManager.Instance.gameState = GameState.betting;
+        StopCoroutine(SpinWheel()); // Stop spinning the wheel.
+        float currentBet = TableManager.Instance.currentBetAmount;
+        float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
+        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
+        SoundManager.Instance.Stop(Constants.SOUNDS.ROLLING_BALL); // Stop the rolling ball sound.
+    }
+
     private IEnumerator SpinWheel()
     {
         float elapsedTime = 0f;
@@ -147,12 +164,10 @@ public class RouletteWheelController : MonoBehaviour
         ballTransform.parent = wheelTransform;
 
         // Return the game state to betting after the ball stops spinning.
-        GameManager.Instance.gameState = GameState.betting;
-        StopCoroutine(SpinWheel()); // Stop spinning the wheel.
-        float currentBet = TableManager.Instance.currentBetAmount;
-        float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
-        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
+        OnMovementEnd();
     }
+
+
     private IEnumerator SpinBallCoroutine(float targetAngle, float duration, bool jumpTheBall = false)
     {
         float elapsedTime = 0f;

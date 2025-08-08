@@ -24,4 +24,9 @@ public class Constants
         public const string BET_REMOVED = "BET_REMOVED";
         public const string PLAYER_CHIP_PLACED = "PLAYER_CHIP_PLACED";
     }
+
+    public struct SOUNDS
+    {
+        public const string ROLLING_BALL = "rolling_ball";
+    }
 }

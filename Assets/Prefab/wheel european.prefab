@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5781096893306030608}
   - component: {fileID: 3183704381912535325}
   m_Layer: 0
-  m_Name: Roulette Wheel - European
+  m_Name: wheel european
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,15 +55,15 @@ MonoBehaviour:
   wheelNumbersAmerican: 00000000200000000f00000013000000040000001500000002000000190000001100000022000000060000001b0000000d000000240000000b0000001e00000008000000170000000a000000ffffffff0500000018000000100000002100000001000000140000000e0000001f0000000900000016000000120000001d000000070000001c0000000c00000023000000030000001a000000
   anglePerNumberEuropean: 9.729
   anglePerNumberAmerican: 9.473
-  wheelSpinStartRadius: 5.68
-  wheelNumbersRadius: 3.02
+  wheelSpinStartRadius: 5.8
+  wheelNumbersRadius: 3.53
   wheelSpinSpeed: 45
   ballFirstSpinSpeed: 360
   ballSecondSpinSpeed: 180
   ballTravelDistance: 0.5
   ballPreDropTurn: 4
   ballInWheelTurn: 2
-  ballLocalEndZLevel: -1.27
+  ballLocalEndZLevel: -1
 --- !u!1 &709743015692876146
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,8 +326,8 @@ Transform:
   m_GameObject: {fileID: 2789703969304032660}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.010082, y: 0.06, z: 2.14}
-  m_LocalScale: {x: 4.9333, y: 4.9333, z: 4.9333}
+  m_LocalPosition: {x: 0.011268, y: 0.06, z: 3.7206}
+  m_LocalScale: {x: 5.3965344, y: 5.3965344, z: 5.3965344}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 350852249671347706}
@@ -530,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3895486266573301890
 Transform:
   m_ObjectHideFlags: 0
