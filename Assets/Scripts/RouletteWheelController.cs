@@ -68,6 +68,8 @@ public class RouletteWheelController : MonoBehaviour
         GameManager.Instance.gameState = GameState.spinning; // Set the game state to spinning.
         GameManager.Instance.winningNumber = determinedNumber; // Set the winning number in the GameManager.
 
+        ballTransform.gameObject.SetActive(true);
+
         List<int> wheelNumbers = tableType == TableType.European ? wheelNumbersEuropean : wheelNumbersAmerican;
         float anglePerNumber = tableType == TableType.European ? anglePerNumberEuropean : anglePerNumberAmerican;
 
@@ -146,8 +148,7 @@ public class RouletteWheelController : MonoBehaviour
 
         // Return the game state to betting after the ball stops spinning.
         GameManager.Instance.gameState = GameState.betting;
-        StopCoroutine(SpinWheel()); // Stop spinning the wheel. 
-
+        StopCoroutine(SpinWheel()); // Stop spinning the wheel.
         float currentBet = TableManager.Instance.currentBetAmount;
         float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
         GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);

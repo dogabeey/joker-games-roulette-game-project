@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
 
     public float startingMoney;
     public TableType defaultTableType;
+    public Transform wheelParent;
+    public Transform tableParent;
+    public GameObject rouletteWheelPrefabAmerican;
+    public GameObject rouletteWheelPrefabEuropean;
+    public GameObject tablePrefabAmerican;
+    public GameObject tablePrefabEuropean;
 
     internal int winningNumber = -2;
     internal GameState gameState = GameState.betting;
@@ -66,7 +72,16 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(CurrentTableType == TableType.European)
+        {
+            Instantiate(rouletteWheelPrefabEuropean, wheelParent);
+            Instantiate(tablePrefabEuropean, tableParent);
+        }
+        else
+        {
+            Instantiate(rouletteWheelPrefabAmerican, wheelParent);
+            Instantiate(tablePrefabAmerican, tableParent);
+        }
     }
 
     // Update is called once per frame
