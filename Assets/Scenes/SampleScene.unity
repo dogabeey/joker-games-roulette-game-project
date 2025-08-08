@@ -5600,6 +5600,12 @@ MonoBehaviour:
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
+  - id: ball_hit
+    audioClips:
+    - {fileID: 8300000, guid: 3f410647cce0f7448a154b88f40898ca, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
 --- !u!1 &504233559
 GameObject:
   m_ObjectHideFlags: 0

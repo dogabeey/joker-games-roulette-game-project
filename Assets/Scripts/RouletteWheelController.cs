@@ -194,7 +194,7 @@ public class RouletteWheelController : MonoBehaviour
                 float jumpOffset = Mathf.Sin(jumpTime * Mathf.PI) * jumpHeight; // Calculate the jump offset
                 ballParent.localPosition = new Vector3(ballParent.localPosition.x, jumpOffset, ballParent.localPosition.z);
                 // If the jumpHeight is lowest possible, play hit sound
-                if (jumpOffset == 0)
+                if (jumpOffset <= 0.03f && jumpOffset >= -0.03f)
                 {
                     SoundManager.Instance.Play(Constants.SOUNDS.BALL_HIT);
                 }

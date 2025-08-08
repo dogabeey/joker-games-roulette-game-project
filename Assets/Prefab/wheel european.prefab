@@ -55,8 +55,8 @@ MonoBehaviour:
   wheelNumbersAmerican: 00000000200000000f00000013000000040000001500000002000000190000001100000022000000060000001b0000000d000000240000000b0000001e00000008000000170000000a000000ffffffff0500000018000000100000002100000001000000140000000e0000001f0000000900000016000000120000001d000000070000001c0000000c00000023000000030000001a000000
   anglePerNumberEuropean: 9.729
   anglePerNumberAmerican: 9.473
-  wheelSpinStartRadius: 5.8
-  wheelNumbersRadius: 3.53
+  wheelSpinStartRadius: 5.87
+  wheelNumbersRadius: 3.27
   wheelSpinSpeed: 45
   ballFirstSpinSpeed: 360
   ballSecondSpinSpeed: 180
@@ -64,7 +64,7 @@ MonoBehaviour:
   ballPreDropTurn: 4
   ballInWheelTurn: 2
   ballLocalStartZLevel: -2.33
-  ballLocalEndZLevel: -0.82
+  ballLocalEndZLevel: -0.75
 --- !u!1 &950674917405210576
 GameObject:
   m_ObjectHideFlags: 0
