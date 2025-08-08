@@ -98,7 +98,7 @@ public class RouletteWheelController : MonoBehaviour
         while (true)
         {
             elapsedTime += Time.deltaTime;
-            wheelTransform.Rotate(0, wheelSpinSpeed * Time.deltaTime, 0);
+            wheelTransform.Rotate(0, 0, wheelSpinSpeed * Time.deltaTime);
             yield return null;
         }
 

@@ -7,13 +7,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public float startingMoney;
-    public TableType defaultTableType;
+    internal TableType defaultTableType = TableType.European;
     public Transform wheelParent;
     public Transform tableParent;
     public GameObject rouletteWheelPrefabAmerican;
     public GameObject rouletteWheelPrefabEuropean;
     public GameObject tablePrefabAmerican;
     public GameObject tablePrefabEuropean;
+    public ParticleSystem winParticleSystem;
     [Header("Bet Settings")]
     public float currentBet;
     public float betIncreamental = 10f;
@@ -106,6 +107,8 @@ public class GameManager : MonoBehaviour
         float gain = betAmount * payoutMultiplier;
         if (isWin)
         {
+            winParticleSystem.Play();
+
             Wins++;
             NetMoney += gain;
             Debug.Log($"Win! Gain: {gain}, New Net Money: {NetMoney}");
