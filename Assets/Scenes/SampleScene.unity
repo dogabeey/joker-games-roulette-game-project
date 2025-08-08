@@ -5606,6 +5606,18 @@ MonoBehaviour:
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
+  - id: win_bet
+    audioClips:
+    - {fileID: 8300000, guid: 7c3d23b869d8d3443aac84a82bffba63, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: lose_bet
+    audioClips:
+    - {fileID: 8300000, guid: 0accb0233fbb68d4a95622beee7dcfaf, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
 --- !u!1 &504233559
 GameObject:
   m_ObjectHideFlags: 0

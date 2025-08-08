@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
         if (isWin)
         {
             winParticleSystem.Play();
+            SoundManager.Instance.Play(Constants.SOUNDS.WIN_BET);
 
             Wins++;
             NetMoney += gain;
@@ -115,6 +116,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            SoundManager.Instance.Play(Constants.SOUNDS.LOSE_BET);
+
             Losses++;
             NetMoney -= betAmount;
             Debug.Log($"Loss! Gain: {gain}, New Net Money: {NetMoney}");
