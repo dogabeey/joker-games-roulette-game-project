@@ -28,5 +28,6 @@ public class Constants
     public struct SOUNDS
     {
         public const string ROLLING_BALL = "rolling_ball";
+        public const string BALL_HIT = "ball_hit";
     }
 }

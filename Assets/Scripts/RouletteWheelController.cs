@@ -114,6 +114,8 @@ public class RouletteWheelController : MonoBehaviour
     }
     public void MoveBallTowardsWheel()
     {
+        SoundManager.Instance.Stop(Constants.SOUNDS.ROLLING_BALL); // Stop the rolling ball sound.
+
         // Lerp the ballParent rotation to simulate the spinning of the ball.
         float targetAngle = ballInWheelTurn * 360f; // Total angle to spin the ball
         // Calculate the duration based on the spin speed
@@ -170,7 +172,6 @@ public class RouletteWheelController : MonoBehaviour
 
         GameManager.Instance.gameState = GameState.betting;
         GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
-        SoundManager.Instance.Stop(Constants.SOUNDS.ROLLING_BALL); // Stop the rolling ball sound.
 
         
     }
@@ -192,6 +193,11 @@ public class RouletteWheelController : MonoBehaviour
                 float jumpTime = Mathf.PingPong(elapsedTime * 2f, 1f); // PingPong to create a bounce effect
                 float jumpOffset = Mathf.Sin(jumpTime * Mathf.PI) * jumpHeight; // Calculate the jump offset
                 ballParent.localPosition = new Vector3(ballParent.localPosition.x, jumpOffset, ballParent.localPosition.z);
+                // If the jumpHeight is lowest possible, play hit sound
+                if (jumpOffset == 0)
+                {
+                    SoundManager.Instance.Play(Constants.SOUNDS.BALL_HIT);
+                }
             }
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
