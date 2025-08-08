@@ -42,10 +42,19 @@ public class RouletteWheelController : MonoBehaviour
     public float ballLocalStartZLevel;
     public float ballLocalEndZLevel; // LOCAL Z position of the ball when It stops spinning and placed one of the numbers.
 
+    private Vector3 ballInitialPos;
+    private Vector3 wheelInitialAngles;
+
     private void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        ballInitialPos = ballTransform.position;
+        wheelInitialAngles = wheelTransform.eulerAngles;
     }
 
     private void OnDrawGizmos()
@@ -66,6 +75,7 @@ public class RouletteWheelController : MonoBehaviour
     // Step 3: Spin the ballParent for the specified number of ballInWheelTurn turns while it is in the wheel, and also start moving ballTransform towards the ballParent for wheelSpinRadius-wheelNumbersRadius distance.
     public void SendTheBallToDeterminedNumber(int determinedNumber)
     {
+        Debug.Log($"Sending the ball to determined number: {determinedNumber}");
         OnMovementStart(determinedNumber);
 
         List<int> wheelNumbers = tableType == TableType.European ? wheelNumbersEuropean : wheelNumbersAmerican;
@@ -162,6 +172,9 @@ public class RouletteWheelController : MonoBehaviour
 
         ballTransform.gameObject.SetActive(true);
         ballTransform.parent = ballParent;
+        ballTransform.position = ballInitialPos;
+
+        wheelTransform.eulerAngles = wheelInitialAngles; // Reset the wheel rotation to its initial state.
     }
     private void OnMovementEnd()
     {
