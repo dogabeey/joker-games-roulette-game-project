@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 using System;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -116,6 +117,7 @@ public class UIManager : MonoBehaviour
     private void UpdateMoney()
     {
         moneyText.text = "$" + ConvertDecimalToKMB(GameManager.Instance.NetMoney);
+        moneyText.color = GameManager.Instance.NetMoney < 0 ? Color.red : Color.white;
     }
 
     private bool CanEnableBetButton()
@@ -131,17 +133,19 @@ public class UIManager : MonoBehaviour
     }
     private string ConvertDecimalToKMB(float value)
     {
-        if (value >= 1000 && value < 1000000)
+        float absValue = Mathf.Abs(value); // Ensure value is positive for formatting
+
+        if (absValue >= 1000 && absValue < 1000000)
         {
-            return (value / 1000).ToString("F1") + "K";
+            return (absValue / 1000).ToString("F1") + "K";
         }
-        else if (value >= 1000000)
+        else if (absValue >= 1000000)
         {
-            return (value / 1000000).ToString("F1") + "M";
+            return (absValue / 1000000).ToString("F1") + "M";
         }
         else
         {
-            return value.ToString("");
+            return absValue.ToString("");
         }
     }
     private void SetPayoutText()
