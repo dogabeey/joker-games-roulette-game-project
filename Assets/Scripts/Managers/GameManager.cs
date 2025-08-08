@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     public GameObject rouletteWheelPrefabEuropean;
     public GameObject tablePrefabAmerican;
     public GameObject tablePrefabEuropean;
+    [Header("Bet Settings")]
+    public float currentBet;
+    public float betIncreamental = 10f;
+    public float maxBet;
 
     internal int winningNumber = -2;
     internal GameState gameState = GameState.betting;

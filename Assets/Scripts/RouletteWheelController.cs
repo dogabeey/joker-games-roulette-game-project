@@ -165,7 +165,7 @@ public class RouletteWheelController : MonoBehaviour
     {
         StopCoroutine(SpinWheel()); // Stop spinning the wheel.
 
-        float currentBet = TableManager.Instance.currentBetAmount;
+        float currentBet = GameManager.Instance.currentBet;
         float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
 
         GameManager.Instance.gameState = GameState.betting;

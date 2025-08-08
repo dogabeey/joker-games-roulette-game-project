@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public Button betButton;
+    public Button lowerBetButton, increaseBetButton;
     public TMP_InputField betInputField;
     public TMP_InputField cheatInput;
     public TMP_Text payoutText;
@@ -27,6 +28,8 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         betButton.onClick.AddListener(OnBetButtonClicked);
+        lowerBetButton.onClick.AddListener(OnLowerBetButtonClicked);
+        increaseBetButton.onClick.AddListener(OnIncreaseBetButtonClicked);
 
         SetBetButton();
     }
@@ -58,6 +61,22 @@ public class UIManager : MonoBehaviour
         int number = cheatInput.text != "" ? Convert.ToInt32(cheatInput.text) : -100;
         RouletteWheelController.Instance.PlayBet(number);
     }
+    private void OnIncreaseBetButtonClicked()
+    {
+        GameManager.Instance.currentBet += 10;
+        if (GameManager.Instance.currentBet > GameManager.Instance.maxBet)
+        {
+            GameManager.Instance.currentBet = GameManager.Instance.maxBet;
+        }
+    }
+    private void OnLowerBetButtonClicked()
+    {
+        GameManager.Instance.currentBet -= 10;
+        if (GameManager.Instance.currentBet < 0)
+        {
+            GameManager.Instance.currentBet = 0;
+        }
+    }
 
     private void SetBetButton()
     {
@@ -73,13 +92,13 @@ public class UIManager : MonoBehaviour
 
     private void SetBetValue()
     {
-        TableManager.Instance.currentBetAmount = betInputField.text != "" ? Convert.ToInt32(betInputField.text) : 0;
+        GameManager.Instance.currentBet = betInputField.text != "" ? Convert.ToInt32(betInputField.text) : 0;
     }
     private void SetPayoutText()
     {
         if (currentPayoutMultiplier != 0 && betInputField.text != "")
         {
-            payoutText.text = "$" + Mathf.RoundToInt(Convert.ToInt32(betInputField.text) * currentPayoutMultiplier);
+            payoutText.text = "$" + GameManager.Instance.currentBet * currentPayoutMultiplier;
         }
         else
         {

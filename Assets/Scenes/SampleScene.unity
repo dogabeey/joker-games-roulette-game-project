@@ -432,6 +432,7 @@ GameObject:
   - component: {fileID: 378810199}
   - component: {fileID: 378810201}
   - component: {fileID: 378810200}
+  - component: {fileID: 378810202}
   m_Layer: 5
   m_Name: arrow right
   m_TagString: Untagged
@@ -496,6 +497,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 378810198}
   m_CullTransparentMesh: 1
+--- !u!114 &378810202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378810198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 378810200}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &469817143
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +722,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   betButton: {fileID: 1655540928}
+  lowerBetButton: {fileID: 1734669520}
+  increaseBetButton: {fileID: 378810202}
   betInputField: {fileID: 1639407119}
   cheatInput: {fileID: 1398877003}
   payoutText: {fileID: 363002735}
@@ -697,10 +744,13 @@ MonoBehaviour:
   defaultTableType: 0
   wheelParent: {fileID: 374993086}
   tableParent: {fileID: 875727813}
-  rouletteWheelPrefabAmerican: {fileID: 536873781450814817, guid: 294fe8f01170fbb4195a73802273cd5a, type: 3}
+  rouletteWheelPrefabAmerican: {fileID: 536873781450814817, guid: d2bc9cf77e9dcac42b5b007369fc483b, type: 3}
   rouletteWheelPrefabEuropean: {fileID: 536873781450814817, guid: da558dc02eb697b49baefea60faf32c3, type: 3}
   tablePrefabAmerican: {fileID: 5017819787160118567, guid: bac923e281ec886489d3d0f8979ac903, type: 3}
   tablePrefabEuropean: {fileID: 5017819787160118567, guid: 2957d8474002ad9408697897e0161080, type: 3}
+  currentBet: 0
+  betIncreamental: 10
+  maxBet: 0
 --- !u!114 &486267030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2486,6 +2536,7 @@ GameObject:
   - component: {fileID: 1734669517}
   - component: {fileID: 1734669519}
   - component: {fileID: 1734669518}
+  - component: {fileID: 1734669520}
   m_Layer: 5
   m_Name: arrow left
   m_TagString: Untagged
@@ -2550,6 +2601,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734669516}
   m_CullTransparentMesh: 1
+--- !u!114 &1734669520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734669516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1734669518}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1740110862
 GameObject:
   m_ObjectHideFlags: 0

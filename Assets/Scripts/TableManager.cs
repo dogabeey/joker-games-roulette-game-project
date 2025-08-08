@@ -13,7 +13,6 @@ public class TableManager : MonoBehaviour
     internal List<RouletteNumber> numbers;
     internal List<BetArea> betAreas;
     internal PlayerChip playerChip;
-    internal float currentBetAmount = 0f;
     internal float currentPayoutMultiplier = 1f;
     internal List<string> currentBetNumbers = new List<string>();
 
