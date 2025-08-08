@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public Button lowerBetButton, increaseBetButton;
     public TMP_InputField betInputField;
     public TMP_InputField cheatInput;
+    public TMP_Text moneyText;
     public TMP_Text payoutText;
     public TMP_Text winningNumber;
 
@@ -39,6 +40,7 @@ public class UIManager : MonoBehaviour
         SetBetValue();
         SetPayoutText();
         SetBetButton();
+        UpdateMoney();
     }
 
     public void SetPayout(float betMultiplier)
@@ -109,6 +111,11 @@ public class UIManager : MonoBehaviour
     private void SetBetButton()
     {
         betButton.interactable = CanEnableBetButton();
+    }
+
+    private void UpdateMoney()
+    {
+        moneyText.text = "$" + ConvertDecimalToKMB(GameManager.Instance.NetMoney);
     }
 
     private bool CanEnableBetButton()

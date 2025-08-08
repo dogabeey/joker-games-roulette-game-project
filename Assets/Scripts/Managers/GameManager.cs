@@ -125,4 +125,5 @@ public enum GameState
 {
     betting,
     spinning,
+    intermission
 }
