@@ -19,7 +19,6 @@ public class UIManager : MonoBehaviour
     public TMP_Text payoutText;
     public TMP_Text winningNumber;
 
-    private float currentPayoutMultiplier = 0f;
 
     private void Awake()
     {
@@ -46,7 +45,7 @@ public class UIManager : MonoBehaviour
 
     public void SetPayout(float betMultiplier)
     {
-        currentPayoutMultiplier = betMultiplier;
+        GameManager.Instance.currentPayoutMultiplier = betMultiplier;
 
     }
 
@@ -122,7 +121,7 @@ public class UIManager : MonoBehaviour
 
     private bool CanEnableBetButton()
     {
-        return currentPayoutMultiplier != 0f 
+        return GameManager.Instance.currentPayoutMultiplier != 0f 
             && GameManager.Instance.currentBet > 0
             && GameManager.Instance.gameState == GameState.betting;
     }
@@ -150,7 +149,7 @@ public class UIManager : MonoBehaviour
     }
     private void SetPayoutText()
     {
-        if (currentPayoutMultiplier == 0)
+        if (GameManager.Instance.currentPayoutMultiplier == 0)
         {
             payoutText.text = "No chip placed!";
         }
@@ -159,9 +158,9 @@ public class UIManager : MonoBehaviour
             payoutText.text = "No bet placed!";
         }
 
-        if (currentPayoutMultiplier != 0 && GameManager.Instance.currentBet > 0)
+        if (GameManager.Instance.currentPayoutMultiplier != 0 && GameManager.Instance.currentBet > 0)
         {
-            payoutText.text = "PAYOUT: " + "$" + GameManager.Instance.currentBet * currentPayoutMultiplier;
+            payoutText.text = "PAYOUT: " + "$" + GameManager.Instance.currentBet * GameManager.Instance.currentPayoutMultiplier;
         }
 
     }

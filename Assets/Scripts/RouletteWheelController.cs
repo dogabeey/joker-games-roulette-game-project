@@ -171,7 +171,7 @@ public class RouletteWheelController : MonoBehaviour
         float payoutMultiplier = TableManager.Instance.currentPayoutMultiplier;
 
         GameManager.Instance.gameState = GameState.betting;
-        GameManager.Instance.CalculateGainBasedOnPayout(currentBet, payoutMultiplier);
+        GameManager.Instance.CalculateGainBasedOnPayout(currentBet);
 
         
     }

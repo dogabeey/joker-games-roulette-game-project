@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public float betIncreamental = 10f;
     public float maxBet;
 
+    internal float currentPayoutMultiplier = 0f;
     internal int winningNumber = -2;
     internal GameState gameState = GameState.betting;
 
@@ -95,16 +96,16 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void CalculateGainBasedOnPayout( float betAmount, float payoutMultiplier)
+    public void CalculateGainBasedOnPayout( float betAmount)
     {
         bool isWin = TableManager.Instance.currentBetNumbers.Contains(winningNumber.ToString());
 
-        if (payoutMultiplier <= 0)
+        if (currentPayoutMultiplier <= 0)
         {
             Debug.LogError("Payout multiplier is zero or negative, no gain calculated.");
             return;
         }
-        float gain = betAmount * payoutMultiplier;
+        float gain = betAmount * currentPayoutMultiplier;
         if (isWin)
         {
             winParticleSystem.Play();
@@ -112,7 +113,7 @@ public class GameManager : MonoBehaviour
 
             Wins++;
             NetMoney += gain;
-            Debug.Log($"Win! Gain: {gain}, New Net Money: {NetMoney}");
+            Debug.Log($"Win! Gain: {gain}, New Net Money: {NetMoney}, Bet: {betAmount}, Payout Multiplier: {currentPayoutMultiplier}");
         }
         else
         {
@@ -120,7 +121,7 @@ public class GameManager : MonoBehaviour
 
             Losses++;
             NetMoney -= betAmount;
-            Debug.Log($"Loss! Gain: {gain}, New Net Money: {NetMoney}");
+            Debug.Log($"Lose! Loss: {betAmount}, New Net Money: {NetMoney}, Payout Multiplier: {currentPayoutMultiplier}");
         }
 
         UIManager.Instance.ShowNumber(winningNumber);
